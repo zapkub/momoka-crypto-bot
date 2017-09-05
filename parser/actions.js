@@ -2,7 +2,10 @@ const ACTION = {
   GET_PRICE: 'GET_PRICE',
   SLEEP: 'SLEEP',
   AWAKE: 'AWAKE',
-  NUDE: 'NUDE'
+  NUDE: 'NUDE',
+  INTERVAL: 'INTERVAL',
+  ERROR: 'ERROR',
+  CLEAR_INTERVAL: 'CLEAR_INTERVAL'
 }
 
 module.exports = ACTION

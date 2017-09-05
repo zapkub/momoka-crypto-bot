@@ -11,14 +11,18 @@ const config = {
 
 const bodyParser = require('body-parser')
 const app = require('express')()
+const { combineStrategy } = require('./utils')
 const lineBot = require('./adapter/line.adapter')
-const bxStrategy = require('./strategy/bx.strategy').strategy
 
-app.use(bodyParser({extended: true}))
+const bxStrategy = require('./strategy/bx.strategy').strategy
+const etcStrategy = require('./strategy/etc.strategy').strategy
+const rootStrategy = combineStrategy([bxStrategy, etcStrategy])
+
+app.use(bodyParser.json({extended: true}))
 app.get('/', (req, res) => {
   res.send('hi')
 })
-app.use('/line', lineBot(bxStrategy, config))
+app.use('/line', lineBot(rootStrategy, config))
 app.listen(config.port, function () {
   console.log('app start!')
 })

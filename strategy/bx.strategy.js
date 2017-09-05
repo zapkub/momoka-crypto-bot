@@ -17,12 +17,9 @@ const getPriceByCurrency = exports.getPriceByCurrency = async function (currency
   const result = Object.keys(priceInfo).map(key => {
     const price = priceInfo[key]
     if (price.secondary_currency.toLowerCase() === currency.toLowerCase()) {
+      if (!compare) compare = 'thb'
       if (price.primary_currency.toLowerCase() === compare.toLowerCase()) {
         return price
-      } else if (!compare) {
-        if (price.primary_currency.toLowerCase() === 'thb') {
-          return price
-        }
       }
     } else {
       return null
@@ -33,6 +30,7 @@ const getPriceByCurrency = exports.getPriceByCurrency = async function (currency
 }
 
 exports.strategy = async function ({ type, payload }) {
+  if (!payload) return null
   if (payload.from === 'bx') {
     switch (type) {
       case ACTIONS.GET_PRICE:
