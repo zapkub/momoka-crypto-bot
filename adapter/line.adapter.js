@@ -16,7 +16,7 @@ module.exports = function (strategy, {port, line: { id, secret, token }}) {
     const { events } = req.body
     const result = await Promise.all(events.map(async ({ source, replyToken, type, message }) => {
       if (type === 'message' || type === 'text') {
-        const user = await client.getProfile(source.userId)
+        // const user = await client.getProfile(source.userId)
         const action = parser({
           text: message.text
         })
@@ -55,11 +55,8 @@ module.exports = function (strategy, {port, line: { id, secret, token }}) {
             previewImageUrl: 'https://cdn.javout.net/wp-content/uploads/2016/10/1pondo-080815_130-glamorous-sakai-momoka-180x253.jpg'
           })
         }
-        const responseText = await strategy(action, user)
-        return client.replyMessage(replyToken, {
-          type: 'text',
-          text: responseText
-        })
+        const responseText = await strategy(action)
+        return client.replyMessage(replyToken, responseText)
       }
     }).filter(message => message))
     res.json(result)

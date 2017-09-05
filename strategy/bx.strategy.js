@@ -38,9 +38,15 @@ exports.strategy = async function ({ type, payload }) {
       case ACTIONS.GET_PRICE:
         const price = await getPriceByCurrency(payload.currency, payload.compare)
         if (!price) {
-          return `${payload.currency} กับ ${payload.compare} ตอนนี้ไม่มีเลยค่า`
+          return {
+            type: 'text',
+            text: `${payload.currency} กับ ${payload.compare} ตอนนี้ไม่มีเลยค่า`
+          }
         }
-        return `${payload.currency} จาก ${payload.from} ตอนนี้ราคา ${price} `
+        return {
+          text: `${payload.currency} จาก ${payload.from} ตอนนี้ราคา ${price} `,
+          type: 'text'
+        }
     }
   }
 }
