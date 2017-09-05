@@ -14,6 +14,16 @@ module.exports = function ({ text }) {
         from: words[4].toLowerCase()
       }
     }
+  } else if (text.match(REGEX.CALL_FOR_PRICE_SHORTCUT)) {
+    const words = text.split(' ')
+    return {
+      type: ACTIONS.GET_PRICE,
+      payload: {
+        currency: words[0].toLowerCase(),
+        compare: words[1].toLowerCase(),
+        from: 'bx'
+      }
+    }
   } else if (text.match(REGEX.SLEEP)) {
     return {
       type: ACTIONS.SLEEP

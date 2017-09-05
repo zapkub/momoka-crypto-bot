@@ -5,6 +5,9 @@
 const ACTIONS = require('../parser/actions')
 
 const API_ENDPOINT = 'https://bx.in.th/api/'
+const getPriceList = exports.getPriceByCurrency = async function () {
+
+}
 
 const getPriceByCurrency = exports.getPriceByCurrency = async function (currency, compare) {
   const response = await global.fetch(API_ENDPOINT, {
