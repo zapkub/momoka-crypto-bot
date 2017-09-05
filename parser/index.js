@@ -32,5 +32,5 @@ module.exports = function ({ text }) {
     return {
       type: ACTIONS.AWAKE
     }
-  }
+  } else if (text.match(REGEX.NUDE)) { return { type: ACTIONS.NUDE } }
 }

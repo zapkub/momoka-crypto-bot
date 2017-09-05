@@ -25,21 +25,35 @@ module.exports = function (strategy, {port, line: { id, secret, token }}) {
           return null
         }
         switch (action.type) {
-          case ACTIONS.AWAKE:
-            this.awake = true
-            return client.replyMessage(replyToken, {
-              type: 'text',
-              text: 'ตื่นแล้วค่า'
-            })
+          case ACTIONS.AWAKE: {
+            if (!this.awake) {
+              this.awake = true
+              return client.replyMessage(replyToken, {
+                type: 'text',
+                text: 'ตื่นแล้วค่า'
+              })
+            }
+            break
+          }
           case ACTIONS.SLEEP:
-            this.awake = false
-            return client.replyMessage(replyToken, {
-              type: 'text',
-              text: 'คร่อกกกก 😴'
-            })
+            if (this.awake) {
+              this.awake = false
+              return client.replyMessage(replyToken, {
+                type: 'text',
+                text: 'คร่อกกกก 😴'
+              })
+            }
+            break
         }
         if (!this.awake) {
           return null
+        }
+        if (action.type === ACTIONS.NUDE) {
+          return client.replyMessage(replyToken, {
+            type: 'image',
+            originalContentUrl: 'https://cdn.javout.net/wp-content/uploads/2016/10/1pondo-080815_130-glamorous-sakai-momoka-180x253.jpg',
+            previewImageUrl: 'https://cdn.javout.net/wp-content/uploads/2016/10/1pondo-080815_130-glamorous-sakai-momoka-180x253.jpg'
+          })
         }
         const responseText = await strategy(action, user)
         return client.replyMessage(replyToken, {
