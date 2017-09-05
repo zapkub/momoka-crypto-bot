@@ -1,4 +1,5 @@
 require('dotenv').config({})
+require('isomorphic-fetch')
 const config = {
   port: process.env.PORT || 6969,
   line: {
@@ -11,9 +12,9 @@ const config = {
 const bodyParser = require('body-parser')
 const app = require('express')()
 const lineBot = require('./adapter/line.adapter')
-const bxStrategy = require('./strategy/bx.strategy')
+const bxStrategy = require('./strategy/bx.strategy').strategy
 
-app.use(bodyParser())
+app.use(bodyParser({extended: true}))
 app.get('/', (req, res) => {
   res.send('hi')
 })
