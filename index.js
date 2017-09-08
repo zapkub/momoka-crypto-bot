@@ -16,7 +16,8 @@ const lineBot = require('./adapter/line.adapter')
 
 const bxStrategy = require('./strategy/bx.strategy').strategy
 const etcStrategy = require('./strategy/etc.strategy').strategy
-const rootStrategy = combineStrategy([bxStrategy, etcStrategy])
+const cryptowatchStrategy = require('./strategy/cryptowatch.strategy').strategy
+const rootStrategy = combineStrategy([bxStrategy, cryptowatchStrategy, etcStrategy])
 
 app.use(bodyParser.json({extended: true}))
 app.get('/', (req, res) => {

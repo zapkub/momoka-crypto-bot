@@ -9,9 +9,9 @@ module.exports = function ({ text }) {
     return {
       type: ACTIONS.GET_PRICE,
       payload: {
-        currency: words[1].toLowerCase(),
-        compare: words[2].toLowerCase(),
-        from: words[4].toLowerCase()
+        currency: words[2].toLowerCase(),
+        compare: words[3].toLowerCase(),
+        from: words[5].toLowerCase()
       }
     }
   } else if (text.match(REGEX.CALL_FOR_PRICE_SHORTCUT) && text.split(' ').length === 2) {
@@ -21,7 +21,7 @@ module.exports = function ({ text }) {
       payload: {
         currency: words[0].toLowerCase(),
         compare: words[1].toLowerCase(),
-        from: 'bx'
+        from: words[1] === 'thb' ? 'bx' : 'cryptowat'
       }
     }
   } else if (text.match(REGEX.REQUEST_INTERVAL_FOR_CURRENCY)) {
@@ -39,7 +39,7 @@ module.exports = function ({ text }) {
         type: ACTIONS.INTERVAL,
         payload: {
           action: ACTIONS.GET_PRICE,
-          from: 'bx',
+          from: words[3] === 'thb' ? 'bx' : 'cryptowat',
           currency: words[2],
           compare: words[3],
           interval: parseInt(words[5])
@@ -48,6 +48,14 @@ module.exports = function ({ text }) {
     } catch (e) {
       return {
         type: ACTIONS.ERROR
+      }
+    }
+  } else if (text.match(REGEX.CALL_CALCULATE)) {
+    const words = text.split(' ')
+    return {
+      type: ACTIONS.CALCULATE,
+      payload: {
+
       }
     }
   } else if (text.match(REGEX.CLEAR_INTERVAL)) {

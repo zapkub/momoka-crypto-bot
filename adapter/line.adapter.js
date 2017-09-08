@@ -28,7 +28,6 @@ module.exports = function (strategy, {port, line: { id, secret, token }}) {
         to: source.groupId || source.userId,
         messages: [ responseText ]
       }
-      console.log(payload)
       const result = await global.fetch(API_ENDPOINT, {
         headers: {
           'Content-Type': 'application/json',

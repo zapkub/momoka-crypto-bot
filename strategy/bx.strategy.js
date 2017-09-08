@@ -3,9 +3,11 @@
 // payload, type
 // strategy act like reducer in redux
 const ACTIONS = require('../parser/actions')
+const responseFactory = require('./response.factory')
 
 const API_ENDPOINT = 'https://bx.in.th/api/'
-const getPriceList = exports.getPriceByCurrency = async function () {
+
+const getPriceList = exports.getAllPrice = async function () {
 
 }
 
@@ -36,15 +38,10 @@ exports.strategy = async function ({ type, payload }) {
       case ACTIONS.GET_PRICE:
         const price = await getPriceByCurrency(payload.currency, payload.compare)
         if (!price) {
-          return {
-            type: 'text',
-            text: `${payload.currency} กับ ${payload.compare} ตอนนี้ไม่มีเลยค่า`
-          }
+          return null
         }
-        return {
-          text: `${payload.currency} จาก ${payload.from} ตอนนี้ราคา ${price} `,
-          type: 'text'
-        }
+        payload.price = price
+        return responseFactory.createResposeText({ type, payload })
     }
   }
 }
