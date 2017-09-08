@@ -36,6 +36,7 @@ class BXAdapter extends ExchangeAdapter {
     const pairing = await result.json()
     const price = getCurrencyFromPairingResult(pairing, currency, compare)
     return {
+      origin: 'fixer',
       primaryCurrency: price.primaryCurrency,
       secondaryCurrency: currency,
       value: price.value

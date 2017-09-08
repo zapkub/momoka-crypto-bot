@@ -1,27 +1,25 @@
-const responseFactory = require('./response.factory')
-const GET_ENDPOINT = (currency, compare) => `https://api.cryptowat.ch/markets/bitfinex/${currency}${compare}/price`
-const ACTIONS = require('../parser/actions')
+require('isomorphic-fetch')
+const ExchangeAdapter = require('./adapter')
 
-async function getPriceByCurrency (currency, compare) {
-  try {
-    const response = await global.fetch(GET_ENDPOINT(currency, compare), {
-      method: 'GET'
-    })
-    const result = await response.json()
-    return result.result.price
-  } catch (e) {
-    console.error(e)
-    return null
+class CryptowatAdapter extends ExchangeAdapter {
+  constructor () {
+    super()
+    this.API_ENDPOINT = `https://api.cryptowat.ch/`
+  }
+
+  async getPriceByCurrencyPrefix (currency, compare) {
+    currency = currency.toLowerCase()
+    compare = compare.toLowerCase()
+    const targetUrl = this.API_ENDPOINT + `markets/bitfinex/${currency}${compare}/price`
+    const result = await global.fetch(targetUrl)
+    const priceInfo = await result.json()
+    return {
+      origin: 'cryptowat',
+      primaryCurrency: compare,
+      secondaryCurrency: currency,
+      value: priceInfo.result.price
+    }
   }
 }
-exports.strategy = async function ({type, payload}) {
-  switch (type) {
-    case ACTIONS.GET_PRICE:
-      if (payload.from === 'cryptowat') {
-        const price = await getPriceByCurrency(payload.currency, payload.compare)
-        payload.price = price
-        if (!price) { return null }
-        return responseFactory.createResposeText({ type, payload })
-      }
-  }
-}
+
+module.exports = CryptowatAdapter
