@@ -4,7 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "yarn nodemon -- index.js"
+    "deploy": "sh .bin/deploy.bash",
+    "dev": "yarn nodemon -- index.js",
+    "test":"yarn jest"
   },
   "dependencies": {
     "@line/bot-sdk": "^2.0.0",

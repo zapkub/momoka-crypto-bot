@@ -7,21 +7,24 @@ const bx = new BXAdapter()
 const cryptowat = new CryptowatAdapter()
 const fixer = new FixerAdapter()
 
-const interestedCurrency = [
-  'omg', 'btc', 'xrp', 'eth'
-]
-exports.getArbitagePriceByCurrency = async function (currency) {
+// const interestedCurrency = [
+//   'omg', 'btc', 'xrp', 'eth'
+// ]
+exports.getArbitagePriceByCurrencyList = async function (interestedCurrency) {
   const fixerResult = await fixer.getPriceByCurrencyPrefix('USD', 'THB')
 
   const promiseList = interestedCurrency.map(async currency => {
     const bxResult = await bx.getPriceByCurrencyPrefix(currency, 'THB')
     const cryptowatResult = await cryptowat.getPriceByCurrencyPrefix(currency, 'USD')
+
     const isNotWorthy = cryptowatResult.value * fixerResult.value > bxResult.value
     const margin = cryptowatResult.value * fixerResult.value - bxResult.value
+    const marginPercent = (100 * margin) / (cryptowatResult.value * fixerResult.value)
     return {
       isWorthy: !isNotWorthy,
       currency,
       margin,
+      marginPercent,
       prices: [
         cryptowatResult,
         bxResult
@@ -30,6 +33,9 @@ exports.getArbitagePriceByCurrency = async function (currency) {
   })
 
   const result = await Promise.all(promiseList)
-  const worthResult = result.filter(price => price.isWorthy)
-  console.log(worthResult)
+  // const worthResult = result.filter(price => price.isWorthy)
+  return {
+    prices: result,
+    thbusd: fixerResult.value
+  }
 }
