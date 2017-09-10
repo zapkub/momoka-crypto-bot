@@ -8,21 +8,22 @@ const config = {
     token: process.env.LINE_CHANNEL_TOKEN
   }
 }
-
+process.on('unhandledRejection', function (reason, p) {
+  console.log('Possibly Unhandled Rejection at: Promise ', p, ' reason: ', reason)
+  // application specific logging here
+})
 const bodyParser = require('body-parser')
 const app = require('express')()
-const { combineStrategy } = require('./utils')
-const lineBot = require('./adapter/line.adapter')
+const lineBot = require('./adapter/messenger/line.adapter')
 
-const bxStrategy = require('./strategy/bx.strategy').strategy
-const etcStrategy = require('./strategy/etc.strategy').strategy
-const rootStrategy = combineStrategy([bxStrategy, etcStrategy])
-
+const arbitageStrategy = require('./strategy/arbitage.strategy')
 app.use(bodyParser.json({extended: true}))
-app.get('/', (req, res) => {
-  res.send('hi')
+
+app.get('/', async (req, res) => {
+  const result = await arbitageStrategy.getArbitagePriceByCurrencyList(['omg', 'btc', 'eth', 'xrp'])
+  res.json(result)
 })
-app.use('/line', lineBot(rootStrategy, config))
+app.use('/line', lineBot(config))
 app.listen(config.port, function () {
   console.log('app start!')
 })
