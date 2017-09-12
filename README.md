@@ -6,7 +6,7 @@
 Momoka is simple Crypto info bot, perform some simple task via messaging api
 
 # Demo
-you can add friend with Momoka right now @`nat4157k`
+you can add friend with Momoka right now `@nat4157k`
 
 ## Command
 ### Check price: 
