@@ -29,6 +29,10 @@ Momoka bot create with a simple design pattern (see below)
 
 ![image](./docs/diagram.png) 
 
+## Roadmap and TODO
+- Subscribe price and alert
+- Subscribe by margin diff and alert
+
 ## Donate
 *BTC*: `12UjMPBdMTRXboHDL2wrbZvZxFMH1uXnv6`
 
