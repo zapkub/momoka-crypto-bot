@@ -1,9 +1,23 @@
+## Project under development
+
 # Simple Line BX Monitor bot
+Momoka is simple Crypto info bot, perform some simple task via messaging api
+
+# Demo
+you can add friend with Momoka right now @`nat4157k`
+
+## Command
+### Check price: 
+`${crypto-prefix} ${currency}` 
+eg: `omg thb`
+### Check margin between Thailand and Foreign exchange: 
+`โมโมกะ เทียบราคานอกหน่อย`
 
 ## Setup
 - Create Line bussiness account
 - Create Line Bot account and setup webhook in Line management
 - create .env file from .env.example
+- run service `npm run dev`
 
 ## Architecture
 Momoka bot create with a simple design pattern (see below)
