@@ -9,7 +9,10 @@ you can add friend with Momoka right now @`nat4157k`
 
 ## Command
 ### Check price: 
+check crypto price reference from [http://bx.in.th](http://bx.in.th) and [cryptowat.ch](http://cryptowat.ch)
+
 `${crypto-prefix} ${currency}` 
+
 eg: `omg thb`
 ### Check margin between Thailand and Foreign exchange: 
 `โมโมกะ เทียบราคานอกหน่อย`
