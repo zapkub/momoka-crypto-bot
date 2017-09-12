@@ -1,6 +1,7 @@
 ## Project under development
 
 <img src="./docs/momoka.png" width="150">
+
 # Simple Line BX Monitor bot
 Momoka is simple Crypto info bot, perform some simple task via messaging api
 
