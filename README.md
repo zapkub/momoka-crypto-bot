@@ -43,4 +43,4 @@ Momoka bot create with a simple design pattern (see below)
 *OMG or ETH*: `0x962B0F5AE1976A9ddE8880503d65088b25E0f1E3`
 
 ## Patreon
-![https://www.patreon.com/momokacrypto](MomokaCryptoBot Patreon page)
+[https://www.patreon.com/momokacrypto](MomokaCryptoBot Patreon page)
