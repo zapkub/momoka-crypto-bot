@@ -39,10 +39,16 @@ const eventsMapper = [
     action: actions.AWAKE
   },
   {
+    test: /โมโมกะ\sเตือน\s.+\sทุกๆ\s[0-9]{1,2}\sนาที/,
+    action: actions.INTERVAL,
+    mapToPayload: (event) => {
+
+    }
+  },
+  {
     test: /โมโมกะ เทียบราคานอกหน่อย/,
     action: actions.GET_ARBITAGE_PRICE,
     mapToPayload: (event) => {
-      const words = event.text.split(' ')
       return {
 
       }

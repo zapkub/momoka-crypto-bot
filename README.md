@@ -5,6 +5,10 @@
 - Create Line Bot account and setup webhook in Line management
 - create .env file from .env.example
 
+## Feature
+- Ask crypto currency price in THB and USD in realtime (via Bx.in.th and cryptowatch)
+- Ask for margin between Bx and Bitfinex
+
 ## Architecture
 Momoka bot create with a simple design pattern (see below)
 
@@ -14,4 +18,7 @@ Momoka bot create with a simple design pattern (see below)
 *BTC*: `12UjMPBdMTRXboHDL2wrbZvZxFMH1uXnv6`
 
 *OMG or ETH*: `0x962B0F5AE1976A9ddE8880503d65088b25E0f1E3`
->>>>>>> 67a23c33fd03ea3f1c9feb6001ac8566e7eb7df5
+
+## Patreon
+
+![https://www.patreon.com/momokacrypto](MomokaCryptoBot Patreon page)
