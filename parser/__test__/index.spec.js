@@ -17,16 +17,35 @@ describe('Language parser test', function () {
       text: 'ตื่น'
     })).toBeUndefined()
   })
-  it('should parse omg thb correctly', () => {
+  it('should parse omg thb correctly also with capitalize', () => {
     expect(parser({
       type: 'message',
-      text: 'โมโมกะ omg thb'
+      text: 'omg thb'
     })).toEqual({
       type: ACTIONS.GET_PRICE,
       payload: {
         compare: 'thb',
-        currency: 'omg',
-        from: 'bx'
+        currency: 'omg'
+      }
+    })
+    expect(parser({
+      type: 'message',
+      text: 'โมโมกะ thb usd'
+    })).toEqual({
+      type: ACTIONS.GET_PRICE,
+      payload: {
+        compare: 'usd',
+        currency: 'thb'
+      }
+    })
+    expect(parser({
+      type: 'message',
+      text: 'Xrpusd'
+    })).toEqual({
+      type: ACTIONS.GET_PRICE,
+      payload: {
+        compare: 'usd',
+        currency: 'xrp'
       }
     })
   })
@@ -37,8 +56,7 @@ describe('Language parser test', function () {
         expect: ACTIONS.GET_PRICE,
         payload: {
           compare: 'thb',
-          currency: 'omg',
-          from: 'bx'
+          currency: 'omg'
         }
       },
       {

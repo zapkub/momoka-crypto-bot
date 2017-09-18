@@ -1,6 +1,6 @@
 export $(cat .env | grep -v ^# | xargs)
 echo 'Deploy Momoka to '$DEPLOY_TARGET
-yarn jest
+yarn test
 rm -rf ./dist
 mkdir -p dist
 tar --exclude='.git' --exclude='.env' --exclude='./dist/artifact.tar' --exclude='./.db' --exclude='./node_modules' --exclude='./.vscode' -czf ./dist/artifact.tar ./

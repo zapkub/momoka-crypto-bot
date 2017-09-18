@@ -6,7 +6,7 @@
   "scripts": {
     "deploy": "sh .bin/deploy.bash",
     "dev": "yarn nodemon -- index.js",
-    "test": "yarn jest"
+    "test": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "dependencies": {
     "@line/bot-sdk": "^2.0.0",
@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "commitizen": "^2.9.6",
+    "coveralls": "^2.13.1",
     "cz-conventional-changelog": "^2.0.0",
     "jest": "^21.0.1",
     "nodemon": "^1.11.0",

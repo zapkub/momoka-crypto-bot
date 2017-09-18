@@ -14,20 +14,19 @@ const eventsMapper = [
     }
   },
   {
-    test: /(^[a-z]{6}$)|(^[a-z]{3}\s[a-z]{3}$)/g,
+    test: /(^[a-zA-Z]{6}$)|(^[a-zA-Z]{3}\s[a-zA-Z]{3}$)/g,
     action: actions.GET_PRICE,
     mapToPayload: (event) => {
       const words = event.text.split(' ')
       if (words.length === 1) {
         return {
-          currency: words[0].substring(0, 3),
-          compare: words[0].substring(3, 6)
+          currency: words[0].substring(0, 3).toLowerCase(),
+          compare: words[0].substring(3, 6).toLowerCase()
         }
       }
       return {
         currency: words[0].toLowerCase(),
-        compare: words[1].toLowerCase(),
-        from: words[1] === 'thb' ? 'bx' : 'cryptowat'
+        compare: words[1].toLowerCase()
       }
     }
   },

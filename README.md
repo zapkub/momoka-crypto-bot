@@ -1,8 +1,10 @@
-## Project under development
+
+# Momoka, Cryptocurrency chatbot
+
+[![Coverage Status](https://coveralls.io/repos/github/zapkub/momoka-crypto-bot/badge.svg?branch=master)](https://coveralls.io/github/zapkub/momoka-crypto-bot?branch=master)
 
 <img src="./docs/momoka.png" width="150">
 
-# Simple Line BX Monitor bot
 Momoka is simple Crypto info bot, perform some simple task via messaging api
 
 ## Feature
