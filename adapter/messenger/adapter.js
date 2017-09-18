@@ -1,32 +1,45 @@
 const BxAdapter = require('../exchange/bx.adapter')
 const CryptowatAdapter = require('../exchange/cryptowat.adapter')
 const arbitageStrategy = require('../../strategy/arbitage.strategy')
+const FixerAdapter = require('../../adapter/exchange/fixer.adapter')
 const actions = require('../../parser/actions')
 
-class Notification {
-  constructor ({ receptionId, action }) {
-    this.__receptionId = receptionId
-    this.__action = action
-  }
-}
 class MessengerAdapter {
   constructor () {
     this.bx = new BxAdapter()
     this.cryptowat = new CryptowatAdapter()
+    this.fixer = new FixerAdapter()
     this.notificationList = []
   }
-  getPrice (currency, compare) {
+  async getPrice (currency, compare) {
     compare = compare.toLowerCase()
-    if (compare === 'thb') {
-      return this.bx.getPriceByCurrencyPrefix(currency, compare)
-    } else if (compare === 'usd') {
-      return this.cryptowat.getPriceByCurrencyPrefix(currency, compare)
+    try {
+      if (compare === 'thb') {
+        const result = await this.bx.getPriceByCurrencyPrefix(currency, compare)
+        return result
+      } else if (compare === 'usd') {
+        const result = await this.cryptowat.getPriceByCurrencyPrefix(currency, compare)
+        return result
+      }
+    } catch (e) {
+      return this.fixer.getPriceByCurrencyPrefix(currency, compare)
     }
+  }
+  // create new user from messenger
+  /**
+   * user: {
+   *  sourceType: 'LINE' || 'FACEBOOK_MESSENGER',
+   *  sourceId: String
+   *  name: String
+   * }
+   */
+  async registerNewUser (user) {
+
   }
 
   // Response message generate here
   async getResponseMessage (action) {
-    console.log('get response with action')
+    console.log('Messenger: get response with action')
     console.log(action)
     switch (action.type) {
       case actions.GET_PRICE:
@@ -39,7 +52,7 @@ class MessengerAdapter {
         } catch (e) {
           return {
             type: 'text',
-            text: 'ไม่สามารถเช็คราคาได้ในขณะนี้ กรุณาลองใหม่ค่ะ'
+            text: 'ไม่เจอข้อมูลดังกล่าว กรุณาลองใหม่ค่ะ'
           }
         }
       case actions.GET_ARBITAGE_PRICE: {

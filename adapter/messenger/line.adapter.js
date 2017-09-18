@@ -36,11 +36,19 @@ class LineAdapter extends MesssengerAdapter {
     })
     return result
   }
+
+  async resolveUser (source) {
+    if (source.userId) {
+      const user = this.client.getProfile(source.userId)
+    }
+  }
+
   async requestHandler (req, res) {
     const { events } = req.body
     const responseResultPromises = events.map(async event => {
       const { source, replyToken, type, message } = event
       console.log('from: ' + source.userId || source.groupId)
+      await this.resolveUser(source)
       if (event.type === 'message') {
         const action = parser({
           type: event.type,
@@ -52,7 +60,7 @@ class LineAdapter extends MesssengerAdapter {
           if (!message) {
             return null
           }
-          console.log('reply message', message)
+          console.log('reply message', message, replyToken)
           return this.client.replyMessage(replyToken, message)
         } catch (e) {
           console.error(e)
@@ -61,6 +69,7 @@ class LineAdapter extends MesssengerAdapter {
       }
     })
 
+    console.log('Response message to line')
     const responseResults = await Promise.all(responseResultPromises)
     res.json(responseResults.filter(message => !!message))
   }

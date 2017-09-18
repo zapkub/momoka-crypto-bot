@@ -1,13 +1,6 @@
-require('dotenv').config({})
 require('isomorphic-fetch')
-const config = {
-  port: process.env.PORT || 6969,
-  line: {
-    id: process.env.LINE_CHANNEL_ID,
-    secret: process.env.LINE_CHANNEL_SECRET,
-    token: process.env.LINE_CHANNEL_TOKEN
-  }
-}
+const config = require('./config')
+
 process.on('unhandledRejection', function (reason, p) {
   console.log('Possibly Unhandled Rejection at: Promise ', p, ' reason: ', reason)
   // application specific logging here

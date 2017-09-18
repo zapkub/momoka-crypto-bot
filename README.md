@@ -8,8 +8,18 @@ Momoka is simple Crypto info bot, perform some simple task via messaging api
 ## Feature
 - Ask crypto currency price in THB and USD in realtime (via Bx.in.th and cryptowatch)
 - Ask for margin between Bx and Bitfinex
+
+## Supported messenger
+- Line
+- Facebook Messenger ( Under development )
+- Telegram ( planned )
+
+
+## Usage
+
 # Demo
 you can add friend with Momoka right now `@nat4157k`
+> Note: Due to maintenance cost this demo just run on cheapest tier on DigitalOcean, I recommended you to run Momoka by yourself for self usage
 
 ## Command
 ### Check price: 
