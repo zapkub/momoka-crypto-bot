@@ -26,7 +26,7 @@ function mapEventWithAction (event) {
 module.exports = function (event) {
   if (event.type === 'message') {
     const botNameRegex = new RegExp(`${config.botName}`)
-    if (event.text.match(botNameRegex)) {
+    if (event.text.match(botNameRegex) || event.text.match(/^[a-z]{6}$/)) {
       event.text = event.text.replace('โมโมกะ', '').trim()
       const result = mapEventWithAction(event)
 

@@ -14,10 +14,16 @@ const eventsMapper = [
     }
   },
   {
-    test: /^\w{3}\s\w{3}/g,
+    test: /(^[a-z]{6}$)|(^[a-z]{3}\s[a-z]{3}$)/g,
     action: actions.GET_PRICE,
     mapToPayload: (event) => {
       const words = event.text.split(' ')
+      if (words.length === 1) {
+        return {
+          currency: words[0].substring(0, 3),
+          compare: words[0].substring(3, 6)
+        }
+      }
       return {
         currency: words[0].toLowerCase(),
         compare: words[1].toLowerCase(),
