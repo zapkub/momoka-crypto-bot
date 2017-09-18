@@ -1,6 +1,6 @@
 {
   "name": "super-doi",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
@@ -21,7 +21,8 @@
     "commitizen": "^2.9.6",
     "cz-conventional-changelog": "^2.0.0",
     "jest": "^21.0.1",
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.11.0",
+    "standard-version": "^4.2.0"
   },
   "config": {
     "commitizen": {
