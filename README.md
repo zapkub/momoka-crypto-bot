@@ -8,23 +8,23 @@
 Momoka is simple Crypto info bot, perform some simple task via messaging api
 
 ## Feature and Roadmap
-[x] Ask crypto currency price in THB and USD in realtime (via Bx.in.th and cryptowatch)
-[x] Ask for margin between Bx (TH) and Bitfinex (GLOBAL by cryptowatch)
-[x] Ask for foreign currency price
-[ ] Subscribe price and alert
-[ ] Subscribe by margin diff and alert
-[ ] Price Data pool ( reduce API call load per request )
-[ ] User can create shortcut for any command
-[ ] User subscription
-[ ] Support Bitfinex API Directly ( current cryptowatch )
-[ ] Support Poloniex
-[ ] Support Bittrex
+- [x] Ask crypto currency price in THB and USD in realtime (via Bx.in.th and cryptowatch)
+- [x] Ask for margin between Bx (TH) and Bitfinex (GLOBAL by cryptowatch)
+- [x] Ask for foreign currency price
+- [ ] Subscribe price and alert
+- [ ] Subscribe by margin diff and alert
+- [ ] Price Data pool ( reduce API call load per request )
+- [ ] User can create shortcut for any command
+- [ ] User subscription
+- [ ] Support Bitfinex API Directly ( current cryptowatch )
+- [ ] Support Poloniex
+- [ ] Support Bittrex
 
 
 ## Supported messenger
-[x] Line
-[ ] Facebook Messenger 
-[ ] Telegram
+- [x] Line
+- [ ] Facebook Messenger 
+- [ ] Telegram
 
 
 ## Usage
