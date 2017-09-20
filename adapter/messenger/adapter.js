@@ -57,7 +57,7 @@ class MessengerAdapter {
         }
       case actions.GET_ARBITAGE_PRICE: {
         try {
-          const result = await arbitageStrategy.getArbitagePriceByCurrencyList(['omg', 'btc', 'xrp', 'eth'])
+          const result = await arbitageStrategy.getArbitagePriceByCurrencyList(['omg', 'btc', 'xrp', 'eth', 'dash'])
           const worthResult = result.prices.map(price => `${price.currency} แพงกว่า ${-price.margin.toFixed(3)} THB (${-price.marginPercent.toFixed(2)}%)\n`)
           return {
             type: 'text',
@@ -67,6 +67,7 @@ class MessengerAdapter {
 
           }
         } catch (e) {
+          console.error(e)
           return {
             type: 'text',
             text: `เกิดข้อผิดพลาดระหว่างเทียบราคา กรุณาลองใหม่ค่ะ`

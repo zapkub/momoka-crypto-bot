@@ -59,7 +59,7 @@ const eventsMapper = [
     }
   },
   {
-    test: /เทียบราคานอกหน่อย/,
+    test: /เทียบราคานอกหน่อย|compare/,
     action: actions.GET_ARBITAGE_PRICE,
     mapToPayload: (event) => {
       return {

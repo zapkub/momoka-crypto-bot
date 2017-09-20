@@ -32,6 +32,13 @@ class BXAdapter extends ExchangeAdapter {
 
   async getPriceByCurrencyPrefix (currency, compare) {
     currency = currency.toUpperCase()
+    console.log('get price from BX')
+    console.log(`${currency}:${compare}`)
+    switch (currency) {
+      case 'DASH':
+        currency = 'DAS'
+        break
+    }
     const result = await global.fetch(this.API_ENDPOINT)
     const pairing = await result.json()
     const price = getCurrencyFromPairingResult(pairing, currency, compare)

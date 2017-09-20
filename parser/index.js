@@ -23,10 +23,13 @@ function mapEventWithAction (event) {
     text: event.text
   }
 }
+function shortcutParse (text) {
+  return text.match(/(^[a-zA-Z]{6}$)|(^[a-zA-Z]{3}\s[a-zA-Z]{3}$)|compare/)
+}
 module.exports = function (event) {
   if (event.type === 'message') {
     const botNameRegex = new RegExp(`${config.botName}`)
-    if (event.text.match(botNameRegex) || event.text.match(/(^[a-zA-Z]{6}$)|(^[a-zA-Z]{3}\s[a-zA-Z]{3}$)/)) {
+    if (event.text.match(botNameRegex) || shortcutParse(event.text)) {
       event.text = event.text.replace('โมโมกะ', '').trim()
       const result = mapEventWithAction(event)
 

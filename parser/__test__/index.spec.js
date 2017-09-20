@@ -11,6 +11,15 @@ describe('Language parser test', function () {
       payload: {}
     })
   })
+  it('should return get GET_ARBITAGE_PRICE on เทียบราคานอกหน่อย and compare', () => {
+    expect(parser({
+      type: 'message',
+      text: 'compare'
+    })).toEqual({
+      type: ACTIONS.GET_ARBITAGE_PRICE,
+      payload: {}
+    })
+  })
   it('should not return anything if text doenst start with BOT_NAME', () => {
     expect(parser({
       type: 'message',

@@ -8,6 +8,8 @@ class CryptowatAdapter extends ExchangeAdapter {
   }
 
   async getPriceByCurrencyPrefix (currency, compare) {
+    console.log('get price from Crytowat')
+    console.log(`${currency}:${compare}`)
     currency = currency.toLowerCase()
     compare = compare.toLowerCase()
     const targetUrl = this.API_ENDPOINT + `markets/bitfinex/${currency}${compare}/price`
