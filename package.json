@@ -1,12 +1,13 @@
 {
   "name": "super-doi",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
     "deploy": "sh .bin/deploy.bash",
     "dev": "yarn nodemon -- index.js",
-    "test": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+    "test": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "release": "standard-version"
   },
   "dependencies": {
     "@line/bot-sdk": "^2.0.0",
