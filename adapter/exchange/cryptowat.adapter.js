@@ -13,8 +13,7 @@ class CryptowatAdapter extends ExchangeAdapter {
     currency = currency.toLowerCase()
     compare = compare.toLowerCase()
     const targetUrl = this.API_ENDPOINT + `markets/bitfinex/${currency}${compare}/price`
-    const result = await global.fetch(targetUrl)
-    const priceInfo = await result.json()
+    const priceInfo = await this.fetchDataToCache(targetUrl)
     return {
       origin: 'cryptowat',
       primaryCurrency: compare,

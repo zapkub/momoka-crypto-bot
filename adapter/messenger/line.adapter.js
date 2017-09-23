@@ -1,6 +1,7 @@
 const line = require('@line/bot-sdk')
 const Router = require('express').Router
 const parser = require('../../parser')
+const chalk = require('chalk')
 const ACTIONS = require('../../parser/actions')
 const MesssengerAdapter = require('./adapter')
 const API_ENDPOINT = 'https://api.line.me/v2/bot/message/push'
@@ -39,7 +40,12 @@ class LineAdapter extends MesssengerAdapter {
 
   async resolveUser (source) {
     if (source.userId) {
-      const user = this.client.getProfile(source.userId)
+      const user = await this.client.getProfile(source.userId)
+      if (user) {
+        console.log(chalk.bold(`${user.displayName}`))
+      } else {
+        console.log(chalk.red('Cannot get user profile from'), source.userId)
+      }
     }
   }
 
@@ -47,20 +53,21 @@ class LineAdapter extends MesssengerAdapter {
     const { events } = req.body
     const responseResultPromises = events.map(async event => {
       const { source, replyToken, type, message } = event
-      console.log('from: ' + source.userId || source.groupId)
+      console.log(chalk.bgBlue(`Incoming message: ${(new Date()).toISOString()}`))
+      console.log(chalk.blue(`from: ${source.userId || source.groupId}`))
       await this.resolveUser(source)
       if (event.type === 'message') {
         const action = parser({
           type: event.type,
           text: event.message.text
         })
-        console.log('text: ' + event.message.text)
+        console.log(`Text: "${event.message.text}"`)
         try {
           const message = await this.getResponseMessage(action)
           if (!message) {
             return null
           }
-          console.log('reply message', message, replyToken)
+          console.log('Response: ', message, replyToken)
           return this.client.replyMessage(replyToken, message)
         } catch (e) {
           console.error(e)
@@ -69,8 +76,8 @@ class LineAdapter extends MesssengerAdapter {
       }
     })
 
-    console.log('Response message to line')
     const responseResults = await Promise.all(responseResultPromises)
+    console.log(chalk.bgGreen(`Response ${responseResults.length} messages to Line: ${(new Date()).toISOString()} `))
     res.json(responseResults.filter(message => !!message))
   }
 }

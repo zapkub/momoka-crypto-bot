@@ -39,8 +39,7 @@ class BXAdapter extends ExchangeAdapter {
         currency = 'DAS'
         break
     }
-    const result = await global.fetch(this.API_ENDPOINT)
-    const pairing = await result.json()
+    const pairing = await this.fetchDataToCache(this.API_ENDPOINT)
     const price = getCurrencyFromPairingResult(pairing, currency, compare)
     return {
       origin: 'fixer',

@@ -14,8 +14,7 @@ class FixerAdapter extends ExchangeAdapter {
     compare = compare.toUpperCase()
     base = base.toUpperCase()
     const url = this.getCurrencyCompareURL(base, compare)
-    const result = await global.fetch(url)
-    const priceInfo = await result.json()
+    const priceInfo = await this.fetchDataToCache(url)
     return {
       origin: 'fixer',
       primaryCurrency: compare,
