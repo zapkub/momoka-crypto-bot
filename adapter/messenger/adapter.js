@@ -3,7 +3,7 @@ const CryptowatAdapter = require('../exchange/cryptowat.adapter')
 const arbitageStrategy = require('../../strategy/arbitage.strategy')
 const notificationService = require('../../strategy/notification.service')
 const FixerAdapter = require('../../adapter/exchange/fixer.adapter')
-const ACTIONS = require('../../parser/ACTIONS')
+const ACTIONS = require('../../parser/actions')
 
 const { UnimplementedError } = require('../../lib/Error')
 
