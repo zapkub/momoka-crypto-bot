@@ -34,14 +34,7 @@ you can add friend with Momoka right now `@nat4157k`
 > Note: Due to maintenance cost this demo just run on cheapest tier on DigitalOcean, I recommended you to run Momoka by yourself for self usage
 
 ## Command
-### Check price: 
-check crypto price reference from [http://bx.in.th](http://bx.in.th) and [cryptowat.ch](http://cryptowat.ch)
-
-`${crypto-prefix} ${currency}` 
-
-eg: `omg thb`
-### Check margin between Thailand and Foreign exchange: 
-`โมโมกะ เทียบราคานอกหน่อย`
+You can ask Momoka for price information like `omgusd`, `margin omg` please goto [Command Guide document](./docs/guide.md) for more information
 
 ## Setup
 - Create Line bussiness account
