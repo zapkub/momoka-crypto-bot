@@ -88,6 +88,11 @@ const eventsMapper = [
     }
   },
   {
+    test: /^เตือนอะไรไว้บ้าง$|^เตือนอะไรอยู่บ้าง$|^มีเตือนอะไรไว้มั่ง$/,
+    action: actions.LIST_ALERT,
+    mapToPayload: (event) => ({})
+  },
+  {
     test: /เลิกเตือน\s\w+/,
     action: actions.CANCEL_ALERT,
     mapToPayload: (event) => {

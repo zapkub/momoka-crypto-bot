@@ -31,8 +31,11 @@ async function watcher () {
 // start notification loop
 setInterval(watcher, NOTIFICATION_CHECK_INTERVAL)
 watcher()
-
-exports.actionHandler = async function ({ condition, source, provider, type, subType, interval, payload }) {
+exports.getNotificationFromReception = async function (receptionId) {
+  const result = await Notification.read({ receptionId })
+  return result
+}
+exports.actionHandler = async function ({ command, condition, source, provider, type, subType, interval, payload }) {
   console.log(chalk.yellow('Notification'))
   console.log(`Notification: request ${chalk.blue(type)}`)
   console.log(payload)
@@ -41,6 +44,7 @@ exports.actionHandler = async function ({ condition, source, provider, type, sub
       ownerId: source.userId,
       receptionId: source.groupId || source.userId,
       type: type,
+      command,
       actionType: subType,
       payload,
       provider,
@@ -51,7 +55,7 @@ exports.actionHandler = async function ({ condition, source, provider, type, sub
     notification.action = 'เพิ่มการแจ้งเตือน'
     return notification
   } else if (type === ACTIONS.CANCEL_ALERT) {
-    const result = await Notification.delete(payload.id)
+    await Notification.delete(payload.id)
     console.log(`Notification: delete ${payload.id}`)
     return {
       action: 'เลิกการแจ้งเตือน',

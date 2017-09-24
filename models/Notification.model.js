@@ -4,6 +4,7 @@ const NotificationSchema = new mongoose.Schema({
   ownerId: String,
   receptionId: String,
   type: String,
+  command: String,
   condition: {
     operation: String,
     value: Number

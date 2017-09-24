@@ -152,6 +152,16 @@ class MessengerAdapter {
           }
         }
       }
+      case ACTIONS.LIST_ALERT: {
+        const result = await notificationService.getNotificationFromReception(action.source.groupId || action.source.userId)
+        const notiStrList = result.map((noti, index) => {
+          return `${noti.command}: ${noti.condition.operation} ${noti.condition.value} (${noti._id})\n\n`
+        })
+        return {
+          type: 'text',
+          text: notiStrList.join('')
+        }
+      }
       case ACTIONS.CONDITION_ALERT:
       case ACTIONS.CANCEL_ALERT:
       case ACTIONS.INTERVAL: {
