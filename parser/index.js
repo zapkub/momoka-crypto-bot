@@ -31,7 +31,7 @@ module.exports = function (event) {
   if (event.type === 'message') {
     const botNameRegex = new RegExp(`${config.botName}`)
     if (event.text.match(botNameRegex) || shortcutParse(event.text)) {
-      event.text = event.text.replace('โมโมกะ', '').trim()
+      event.text = event.text.replace(config.botName, '').trim()
       const result = mapEventWithAction(event)
 
       // check if it begin with alert function
