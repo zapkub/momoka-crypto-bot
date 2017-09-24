@@ -72,7 +72,7 @@ class MessengerAdapter {
             type: 'text',
             text:
             `แจ้งเตือน Margin ${payload.currency}\n` +
-            `ตอนนี้ ${result.marginPercent.toFixed(3)}% ${conditionResult.text} ${condition.value}& แล้วค่ะ\n` +
+            `ตอนนี้ ${result.marginPercent.toFixed(3)}% ${conditionResult.text} ${condition.value}% แล้วค่ะ\n` +
             `(ref. ${_id})`
           }
         } else {
