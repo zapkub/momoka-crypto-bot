@@ -38,8 +38,8 @@ exports.actionHandler = async function ({ condition, source, provider, type, sub
   console.log(payload)
   if (type === ACTIONS.CONDITION_ALERT) {
     const notification = await Notification.create({
-      ownerId: source.userId || source.groupId,
-      receptionId: source.userId || source.groupId,
+      ownerId: source.userId,
+      receptionId: source.groupId || source.userId,
       type: type,
       actionType: subType,
       payload,
