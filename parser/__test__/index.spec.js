@@ -22,7 +22,7 @@ describe('Language parser test', function () {
       type: 'message',
       text: 'compare'
     })).toEqual({
-      type: ACTIONS.GET_ARBITAGE_PRICE,
+      type: ACTIONS.GET_ARBITAGE_PRICE_LIST,
       payload: {}
     })
   })
@@ -90,6 +90,7 @@ describe('Language parser test', function () {
       {
         command: 'omg thb',
         expect: ACTIONS.GET_PRICE,
+        source: {},
         payload: {
           compare: 'thb',
           currency: 'omg'
@@ -97,7 +98,8 @@ describe('Language parser test', function () {
       },
       {
         command: 'เทียบราคานอกหน่อย',
-        expect: ACTIONS.GET_ARBITAGE_PRICE,
+        expect: ACTIONS.GET_ARBITAGE_PRICE_LIST,
+        source: {},
         payload: {}
       }
     ]
@@ -105,13 +107,16 @@ describe('Language parser test', function () {
     for (let commandObject of commandList) {
       const result = parser({
         type: 'message',
-        text: `โมโมกะ เตือน ${commandObject.command} ทุกๆ 5 นาที`
+        text: `โมโมกะ เตือน ${commandObject.command} ทุกๆ 5 นาที`,
+
+        source: {}
       })
       expect(result).toEqual({
         interval: 1000 * 5 * 60,
         type: ACTIONS.INTERVAL,
         command: commandObject.command,
         subType: commandObject.expect,
+        source: {},
         payload: commandObject.payload
       })
     }

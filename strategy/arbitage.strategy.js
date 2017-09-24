@@ -10,32 +10,33 @@ const fixer = new FixerAdapter()
 // const interestedCurrency = [
 //   'omg', 'btc', 'xrp', 'eth'
 // ]
-exports.getArbitagePriceByCurrencyList = async function (interestedCurrency) {
+const getArbitagePriceByCurrency = exports.getArbitagePriceByCurrency = async currency => {
   const fixerResult = await fixer.getPriceByCurrencyPrefix('USD', 'THB')
+  const bxResult = await bx.getPriceByCurrencyPrefix(currency, 'THB')
+  const cryptowatResult = await cryptowat.getPriceByCurrencyPrefix(currency, 'USD')
 
-  const promiseList = interestedCurrency.map(async currency => {
-    const bxResult = await bx.getPriceByCurrencyPrefix(currency, 'THB')
-    const cryptowatResult = await cryptowat.getPriceByCurrencyPrefix(currency, 'USD')
-
-    const isNotWorthy = cryptowatResult.value * fixerResult.value > bxResult.value
-    const margin = cryptowatResult.value * fixerResult.value - bxResult.value
-    const marginPercent = (100 * margin) / (cryptowatResult.value * fixerResult.value)
-    return {
-      isWorthy: !isNotWorthy,
-      currency,
-      margin,
-      marginPercent,
-      prices: [
-        cryptowatResult,
-        bxResult
-      ]
-    }
-  })
+  const isNotWorthy = cryptowatResult.value * fixerResult.value > bxResult.value
+  const margin = cryptowatResult.value * fixerResult.value - bxResult.value
+  const marginPercent = (100 * margin) / (cryptowatResult.value * fixerResult.value)
+  return {
+    thbusd: fixerResult.value,
+    isWorthy: !isNotWorthy,
+    currency,
+    margin,
+    marginPercent,
+    prices: [
+      cryptowatResult,
+      bxResult
+    ]
+  }
+}
+exports.getArbitagePriceByCurrencyList = async function (interestedCurrency) {
+  const promiseList = interestedCurrency.map(getArbitagePriceByCurrency)
 
   const result = await Promise.all(promiseList)
   // const worthResult = result.filter(price => price.isWorthy)
   return {
     prices: result,
-    thbusd: fixerResult.value
+    thbusd: result.thbusd
   }
 }

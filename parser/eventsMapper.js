@@ -44,6 +44,16 @@ const eventsMapper = [
     action: actions.AWAKE
   },
   {
+    test: /^margin\s[a-zA-Z]{3}$/,
+    action: actions.GET_ARBITAGE_PRICE,
+    mapToPayload: (event) => {
+      const words = event.text.split(' ')
+      return {
+        currency: words[1]
+      }
+    }
+  },
+  {
     test: /เตือน\s.+\sทุกๆ\s[0-9]{1,2}\sนาที/g,
     action: actions.INTERVAL,
     mapToPayload: (event) => {
@@ -59,7 +69,7 @@ const eventsMapper = [
     }
   },
   {
-    test: /เตือน\s.+\sเมื่อ\s(มากกว่า|น้อยกว่า)\s[0-9]+$/g,
+    test: /เตือน\s.+\sเมื่อ\s(มากกว่า|น้อยกว่า)\s-?[0-9]+(\.[0-9]{1,2})?$/g,
     action: actions.CONDITION_ALERT,
     mapToPayload: (event) => {
       const words = event.text
@@ -72,7 +82,7 @@ const eventsMapper = [
         command: words[1],
         condition: {
           operation: condition[0] === 'มากกว่า' ? 'MORE_THAN' : 'LESS_THAN',
-          value: parseInt(condition[1])
+          value: parseFloat(condition[1])
         }
       }
     }
@@ -89,7 +99,7 @@ const eventsMapper = [
   },
   {
     test: /เทียบราคานอกหน่อย|compare/,
-    action: actions.GET_ARBITAGE_PRICE,
+    action: actions.GET_ARBITAGE_PRICE_LIST,
     mapToPayload: (event) => {
       return {
 

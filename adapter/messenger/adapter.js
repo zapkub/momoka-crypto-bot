@@ -12,12 +12,12 @@ function mappingOperator ({operation, value}, result) {
     case 'MORE_THAN':
       return {
         text: 'มากกว่า',
-        result: result > value
+        isMatch: result > value
       }
     case 'LESS_THAN':
       return {
         text: 'น้อยกว่า',
-        result: result < value
+        isMatch: result < value
       }
   }
 }
@@ -61,14 +61,34 @@ class MessengerAdapter {
   }
 
   async reduceNotification ({ type, actionType, payload, condition, _id }) {
+    console.log('notification type: ' + type)
+    console.log('action type: ' + actionType)
     switch (actionType) {
+      case ACTIONS.GET_ARBITAGE_PRICE: {
+        const result = await arbitageStrategy.getArbitagePriceByCurrency(payload.currency)
+        const conditionResult = mappingOperator(condition, result.marginPercent)
+        if (conditionResult.isMatch) {
+          return {
+            type: 'text',
+            text:
+            `แจ้งเตือน Margin ${payload.currency}\n` +
+            `ตอนนี้ ${result.marginPercent.toFixed(3)}% ${conditionResult.text} ${condition.value}& แล้วค่ะ\n` +
+            `(ref. ${_id})`
+          }
+        } else {
+          return undefined
+        }
+      }
       case ACTIONS.GET_PRICE: {
         const result = await this.getPrice(payload.currency, payload.compare)
         const conditionResult = mappingOperator(condition, result.value)
-        if (conditionResult.result) {
+        if (conditionResult.isMatch) {
           return {
             type: 'text',
-            text: `แจ้งเตือนราคา ${payload.currency}${payload.compare} (${result.value}) ตอนนี้ ${conditionResult.text} ${condition.value} แล้วค่ะ (ref. ${_id})`
+            text:
+            `แจ้งเตือน ${payload.currency}${payload.compare} (${result.value}) \n` +
+            `ตอนนี้ ${conditionResult.text} ${condition.value} แล้วค่ะ\n` +
+            `(ref. ${_id})`
           }
         }
       }
@@ -106,13 +126,21 @@ class MessengerAdapter {
           }
         }
       case ACTIONS.GET_ARBITAGE_PRICE: {
+        console.log(action)
+        const result = await arbitageStrategy.getArbitagePriceByCurrency(action.payload.currency)
+        return {
+          type: 'text',
+          text: `ราคา ${result.currency} เทียบ bx กับ bitfinex แพงกว่า ${result.marginPercent.toFixed(2)}% (${result.margin.toFixed(3)} THB)`
+        }
+      }
+      case ACTIONS.GET_ARBITAGE_PRICE_LIST: {
         try {
           const result = await arbitageStrategy.getArbitagePriceByCurrencyList(['omg', 'btc', 'xrp', 'eth', 'dash'])
           const worthResult = result.prices.map(price => `${price.currency} แพงกว่า ${-price.margin.toFixed(3)} THB (${-price.marginPercent.toFixed(2)}%)\n`)
           return {
             type: 'text',
             text: `ราคาตลาดเทียบระหว่าง bx กับ Bifinex\n` +
-          `ค่าเงิน 1 USD ต่อ ${result.thbusd}  THB\n` +
+          `ค่าเงิน 1 USD ต่อ ${result.thbusd} THB\n` +
           worthResult.join('')
 
           }
