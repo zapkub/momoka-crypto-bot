@@ -71,8 +71,8 @@ class MessengerAdapter {
           return {
             type: 'text',
             text:
-            `แจ้งเตือน Margin ${payload.currency}\n` +
-            `ตอนนี้ ${result.marginPercent.toFixed(3)}% ${conditionResult.text} ${condition.value}% แล้วค่ะ\n` +
+            `แจ้งเตือน ${payload.currency} ${conditionResult.text} ${condition.value}%\n` +
+            `ตอนนี้ ${result.marginPercent.toFixed(3)}%  แล้วค่ะ\n` +
             `(ref. ${_id})`
           }
         } else {
@@ -86,8 +86,8 @@ class MessengerAdapter {
           return {
             type: 'text',
             text:
-            `แจ้งเตือน ${payload.currency}${payload.compare} (${result.value}) \n` +
-            `ตอนนี้ ${conditionResult.text} ${condition.value} แล้วค่ะ\n` +
+            `แจ้งเตือน ${payload.currency}${payload.compare} ${conditionResult.text} ${condition.value}  \n` +
+            `ตอนนี้ ${result.value} แล้วค่ะ\n` +
             `(ref. ${_id})`
           }
         }

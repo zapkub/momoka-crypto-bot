@@ -14,7 +14,7 @@ const eventsMapper = [
     }
   },
   {
-    test: /(^[a-zA-Z]{6}$)|(^[a-zA-Z]{3}\s[a-zA-Z]{3}$)/g,
+    test: /(^[a-zA-Z]{6}$)|(^[a-zA-Z]{3,4}\s[a-zA-Z]{3}$)/g,
     action: actions.GET_PRICE,
     mapToPayload: (event) => {
       const words = event.text.split(' ')
@@ -44,7 +44,7 @@ const eventsMapper = [
     action: actions.AWAKE
   },
   {
-    test: /^margin\s[a-zA-Z]{3}$/,
+    test: /^margin\s[a-zA-Z]{3,4}$/,
     action: actions.GET_ARBITAGE_PRICE,
     mapToPayload: (event) => {
       const words = event.text.split(' ')
@@ -69,7 +69,7 @@ const eventsMapper = [
     }
   },
   {
-    test: /เตือน\s.+\sเมื่อ\s(มากกว่า|น้อยกว่า)\s-?[0-9]+(\.[0-9]{1,2})?$/g,
+    test: /เตือน\s.+\sเมื่อ\s(มากกว่า|น้อยกว่า|แพงกว่า|ถูกกว่า)\s-?[0-9]+(\.[0-9]{1,2})?$/g,
     action: actions.CONDITION_ALERT,
     mapToPayload: (event) => {
       const words = event.text
@@ -81,7 +81,7 @@ const eventsMapper = [
         type: actions.CONDITION_ALERT,
         command: words[1],
         condition: {
-          operation: condition[0] === 'มากกว่า' ? 'MORE_THAN' : 'LESS_THAN',
+          operation: condition[0] === 'มากกว่า' || condition[0] === 'แพงกว่า' ? 'MORE_THAN' : 'LESS_THAN',
           value: parseFloat(condition[1])
         }
       }
