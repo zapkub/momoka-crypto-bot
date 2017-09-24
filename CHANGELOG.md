@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.4.0"></a>
+# [2.4.0](https://github.com/zapkub/momoka-crypto-bot/compare/v2.3.0...v2.4.0) (2017-09-24)
+
+
+### Bug Fixes
+
+* **line:** handle user profile get errror ([c9cfc14](https://github.com/zapkub/momoka-crypto-bot/commit/c9cfc14))
+* **messenger-adapter:** bug in action require file name ([17e7d89](https://github.com/zapkub/momoka-crypto-bot/commit/17e7d89))
+* **notification:** fix bug on margin notification (typo) ([d73c38c](https://github.com/zapkub/momoka-crypto-bot/commit/d73c38c))
+* **notification:** fix notification receptionid must check groupid first ([c5b3b3a](https://github.com/zapkub/momoka-crypto-bot/commit/c5b3b3a))
+* **parser:** support dash with 4 char ([f037182](https://github.com/zapkub/momoka-crypto-bot/commit/f037182))
+
+
+### Features
+
+* **notification:** Momoka can alert you for a price at any value ! ([38fc5f2](https://github.com/zapkub/momoka-crypto-bot/commit/38fc5f2))
+* **notification:** เพิ่ม margin notification ([1f13466](https://github.com/zapkub/momoka-crypto-bot/commit/1f13466))
+* **notification:** เพิ่ม เรียกดู notification list ([8aa866b](https://github.com/zapkub/momoka-crypto-bot/commit/8aa866b))
+
+
+
 <a name="2.3.0"></a>
 # [2.3.0](https://github.com/zapkub/momoka-crypto-bot/compare/v2.2.0...v2.3.0) (2017-09-23)
 
