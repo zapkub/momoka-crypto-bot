@@ -59,6 +59,35 @@ const eventsMapper = [
     }
   },
   {
+    test: /เตือน\s.+\sเมื่อ\s(มากกว่า|น้อยกว่า)\s[0-9]+$/g,
+    action: actions.CONDITION_ALERT,
+    mapToPayload: (event) => {
+      const words = event.text
+        .split(/(\sเมื่อ)|(เตือน\s)|(\sนาที)/)
+        .filter(word => !!word)
+        .map(word => word.trim())
+      const condition = words[3].split(' ')
+      return {
+        type: actions.CONDITION_ALERT,
+        command: words[1],
+        condition: {
+          operation: condition[0] === 'มากกว่า' ? 'MORE_THAN' : 'LESS_THAN',
+          value: parseInt(condition[1])
+        }
+      }
+    }
+  },
+  {
+    test: /เลิกเตือน\s\w+/,
+    action: actions.CANCEL_ALERT,
+    mapToPayload: (event) => {
+      const words = event.text.split(' ')
+      return {
+        id: words[1]
+      }
+    }
+  },
+  {
     test: /เทียบราคานอกหน่อย|compare/,
     action: actions.GET_ARBITAGE_PRICE,
     mapToPayload: (event) => {

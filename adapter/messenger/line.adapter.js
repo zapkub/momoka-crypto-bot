@@ -9,6 +9,7 @@ const API_ENDPOINT = 'https://api.line.me/v2/bot/message/push'
 class LineAdapter extends MesssengerAdapter {
   constructor ({ channelAccessToken, channelSecret }) {
     super()
+    this.__provider = 'LINE'
     this.channelAccessToken = channelAccessToken
     this.channelSecret = channelSecret
     this.client = new line.Client({
@@ -27,6 +28,7 @@ class LineAdapter extends MesssengerAdapter {
       to: sourceId,
       messages: messages
     }
+    console.log(chalk.yellow('Line: Send message.....'))
     const result = await global.fetch(API_ENDPOINT, {
       headers: {
         'Content-Type': 'application/json',
@@ -35,6 +37,7 @@ class LineAdapter extends MesssengerAdapter {
       method: 'post',
       body: JSON.stringify(payload)
     })
+    console.log(chalk.bgGreen('Line: Message sent!'))
     return result
   }
 
@@ -63,7 +66,8 @@ class LineAdapter extends MesssengerAdapter {
       if (event.type === 'message') {
         const action = parser({
           type: event.type,
-          text: event.message.text
+          text: event.message.text,
+          source
         })
         console.log(`Text: "${event.message.text}"`)
         try {

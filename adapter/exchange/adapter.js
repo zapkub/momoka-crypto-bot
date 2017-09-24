@@ -1,5 +1,4 @@
-
-const UnimplementedError = (methodName) => new Error(`UnimplementedError (${methodName})`)
+const { UnimplementedError } = require('../../lib/Error')
 const CACHE_PURGE_INTERVAL = 1000 * 20
 const chalk = require('chalk')
 require('isomorphic-fetch')

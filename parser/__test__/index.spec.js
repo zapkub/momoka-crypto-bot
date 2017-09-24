@@ -5,9 +5,15 @@ describe('Language parser test', function () {
   it('should parse cmd correctly', async () => {
     expect(parser({
       type: 'message',
-      text: 'โมโมกะ ตื่น'
+      text: 'โมโมกะ ตื่น',
+      source: {
+        groupId: 'mock'
+      }
     })).toEqual({
       type: ACTIONS.AWAKE,
+      source: {
+        groupId: 'mock'
+      },
       payload: {}
     })
   })
@@ -58,7 +64,28 @@ describe('Language parser test', function () {
       }
     })
   })
-  it('should parse เตือน correctly', async () => {
+  it('should parse เตือน with condition correctly', async () => {
+    const result = parser({
+      type: 'message',
+      text: 'โมโมกะ เตือน omgthb เมื่อ มากกว่า 300',
+      source: {}
+    })
+    expect(result).toEqual({
+      type: ACTIONS.CONDITION_ALERT,
+      subType: ACTIONS.GET_PRICE,
+      command: 'omgthb',
+      condition: {
+        operation: 'MORE_THAN',
+        value: 300
+      },
+      source: {},
+      payload: {
+        compare: 'thb',
+        currency: 'omg'
+      }
+    })
+  })
+  it('should parse เตือน with interval correctly', async () => {
     let commandList = [
       {
         command: 'omg thb',
@@ -81,9 +108,10 @@ describe('Language parser test', function () {
         text: `โมโมกะ เตือน ${commandObject.command} ทุกๆ 5 นาที`
       })
       expect(result).toEqual({
-        type: ACTIONS.INTERVAL,
-        subType: commandObject.expect,
         interval: 1000 * 5 * 60,
+        type: ACTIONS.INTERVAL,
+        command: commandObject.command,
+        subType: commandObject.expect,
         payload: commandObject.payload
       })
     }

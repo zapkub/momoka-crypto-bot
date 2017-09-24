@@ -27,6 +27,7 @@ function shortcutParse (text) {
   return text.match(/(^[a-zA-Z]{6}$)|(^[a-zA-Z]{3}\s[a-zA-Z]{3}$)|compare/)
 }
 module.exports = function (event) {
+  console.log(event)
   if (event.type === 'message') {
     const botNameRegex = new RegExp(`${config.botName}`)
     if (event.text.match(botNameRegex) || shortcutParse(event.text)) {
@@ -34,19 +35,22 @@ module.exports = function (event) {
       const result = mapEventWithAction(event)
 
       // check if it begin with alert function
-      if (result.type === ACTIONS.INTERVAL) {
+      if (result.type === ACTIONS.INTERVAL || result.type === ACTIONS.CONDITION_ALERT) {
         const subAction = mapEventWithAction({
           text: result.payload.command,
           type: 'message'
         })
         return {
-          type: ACTIONS.INTERVAL,
+          ...result.payload,
+          source: event.source,
           subType: subAction.type,
-          interval: result.payload.interval,
           payload: subAction.payload
         }
       } else {
-        return result
+        return {
+          ...result,
+          source: event.source
+        }
       }
     }
   }

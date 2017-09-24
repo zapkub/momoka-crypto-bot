@@ -1,22 +1,36 @@
+/**
+ * Create by Rungsikorn Rungsikavanich
+ * email: rungsikorn@me.com
+ * MIT License
+ */
+
 require('isomorphic-fetch')
 const config = require('./config')
+const DBConnection = require('./lib/DBConnection')
 
 process.on('unhandledRejection', function (reason, p) {
   console.log('Possibly Unhandled Rejection at: Promise ', p, ' reason: ', reason)
-  // application specific logging here
 })
+
 const bodyParser = require('body-parser')
 const app = require('express')()
-const lineBot = require('./adapter/messenger/line.adapter')
+app.use(require('express-ping').ping())
 
-const arbitageStrategy = require('./strategy/arbitage.strategy')
 app.use(bodyParser.json({extended: true}))
 
-app.get('/', async (req, res) => {
-  const result = await arbitageStrategy.getArbitagePriceByCurrencyList(['omg', 'btc', 'eth', 'xrp'])
-  res.json(result)
-})
-app.use('/line', lineBot(config))
-app.listen(config.port, function () {
-  console.log('app start!')
-})
+async function initApp () {
+  await DBConnection(config.mongoURL)
+
+  const lineBot = require('./adapter/messenger/line.adapter')
+  const arbitageStrategy = require('./strategy/arbitage.strategy')
+  app.get('/', async (req, res) => {
+    const result = await arbitageStrategy.getArbitagePriceByCurrencyList(['omg', 'btc', 'eth', 'xrp'])
+    res.json(result)
+  })
+  app.use('/line', lineBot(config))
+  app.listen(config.port, function () {
+    console.log('app start!')
+  })
+}
+
+initApp()
