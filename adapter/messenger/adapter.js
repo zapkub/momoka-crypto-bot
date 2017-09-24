@@ -74,6 +74,9 @@ class MessengerAdapter {
           }
         }
       }
+      case actions.INTERVAL: {
+        break
+      }
       case actions.AWAKE:
         return {
           type: 'text',

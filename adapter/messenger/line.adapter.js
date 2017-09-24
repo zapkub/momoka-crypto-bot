@@ -39,13 +39,17 @@ class LineAdapter extends MesssengerAdapter {
   }
 
   async resolveUser (source) {
-    if (source.userId) {
-      const user = await this.client.getProfile(source.userId)
-      if (user) {
-        console.log(chalk.bold(`${user.displayName}`))
-      } else {
-        console.log(chalk.red('Cannot get user profile from'), source.userId)
+    try {
+      if (source.userId) {
+        const user = await this.client.getProfile(source.userId)
+        if (user) {
+          console.log(chalk.bold(`${user.displayName}`))
+        } else {
+          console.log(chalk.red('Cannot get user profile from'), source.userId)
+        }
       }
+    } catch (e) {
+      console.log(chalk.red('Line: get user profile error: ') + `${e.statusCode}`)
     }
   }
 
