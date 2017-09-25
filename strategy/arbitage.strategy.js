@@ -37,6 +37,6 @@ exports.getArbitagePriceByCurrencyList = async function (interestedCurrency) {
   const result = await Promise.all(promiseList)
   return {
     prices: result,
-    thbusd: fixerResult
+    thbusd: fixerResult.value
   }
 }
