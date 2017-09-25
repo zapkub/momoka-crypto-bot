@@ -14,6 +14,12 @@ process.on('unhandledRejection', function (reason, p) {
 
 const bodyParser = require('body-parser')
 const app = require('express')()
+
+const fs = require('fs')
+const path = require('path')
+const showdown = require('showdown')
+const converter = new showdown.Converter()
+
 app.use(require('express-ping').ping())
 
 app.use(bodyParser.json({extended: true}))
@@ -22,10 +28,9 @@ async function initApp () {
   await DBConnection(config.mongoURL)
 
   const lineBot = require('./adapter/messenger/line.adapter')
-  const arbitageStrategy = require('./strategy/arbitage.strategy')
   app.get('/', async (req, res) => {
-    const result = await arbitageStrategy.getArbitagePriceByCurrencyList(['omg', 'btc', 'eth', 'xrp'])
-    res.json(result)
+    const html = converter.makeHtml(fs.readFileSync(path.join(__dirname, './CHANGELOG.md')).toString())
+    res.send(html)
   })
   app.use('/line', lineBot(config, require('./strategy/index')))
   app.listen(config.port, function () {
