@@ -1,4 +1,3 @@
-const actions = require('../parser/actions')
 const arbitageStrategy = require('./arbitage.strategy')
 const priceStrategy = require('./price.strategy')
 
