@@ -30,7 +30,7 @@ async function initApp () {
   const lineBot = require('./adapter/messenger/line.adapter')
   app.get('/', async (req, res) => {
     const html = converter.makeHtml(fs.readFileSync(path.join(__dirname, './CHANGELOG.md')).toString())
-    res.send(html)
+    res.send(`<head><link href='https://sindresorhus.com/github-markdown-css/github-markdown.css' rel='stylesheet' /></head>` + `<section class='markdown-body'>${html}</section>`)
   })
   app.use('/line', lineBot(config, require('./strategy/index')))
   app.listen(config.port, function () {
