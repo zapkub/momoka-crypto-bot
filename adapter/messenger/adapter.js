@@ -1,49 +1,15 @@
-const BxAdapter = require('../exchange/bx.adapter')
-const CryptowatAdapter = require('../exchange/cryptowat.adapter')
-const arbitageStrategy = require('../../strategy/arbitage.strategy')
-const notificationService = require('../../strategy/notification.service')
-const FixerAdapter = require('../../adapter/exchange/fixer.adapter')
+
+const notificationService = require('../notification.service')
 const ACTIONS = require('../../parser/actions')
 
+const strategies = require('../../strategy')
 const { UnimplementedError } = require('../../lib/Error')
-
-function mappingOperator ({operation, value}, result) {
-  switch (operation) {
-    case 'MORE_THAN':
-      return {
-        text: 'มากกว่า',
-        isMatch: result > value
-      }
-    case 'LESS_THAN':
-      return {
-        text: 'น้อยกว่า',
-        isMatch: result < value
-      }
-  }
-}
 
 class MessengerAdapter {
   constructor () {
-    this.bx = new BxAdapter()
-    this.cryptowat = new CryptowatAdapter()
-    this.fixer = new FixerAdapter()
     this.__provider = 'not defined'
     this.notificationList = []
     notificationService.registerWatcher(this.noticeUser.bind(this))
-  }
-  async getPrice (currency, compare) {
-    compare = compare.toLowerCase()
-    try {
-      if (compare === 'thb') {
-        const result = await this.bx.getPriceByCurrencyPrefix(currency, compare)
-        return result
-      } else if (compare === 'usd') {
-        const result = await this.cryptowat.getPriceByCurrencyPrefix(currency, compare)
-        return result
-      }
-    } catch (e) {
-      return this.fixer.getPriceByCurrencyPrefix(currency, compare)
-    }
   }
   // create new user from messenger
   /**
@@ -60,37 +26,16 @@ class MessengerAdapter {
     throw new UnimplementedError('sendMessage')
   }
 
-  async reduceNotification ({ type, actionType, payload, condition, _id }) {
-    console.log('notification type: ' + type)
-    console.log('action type: ' + actionType)
-    switch (actionType) {
-      case ACTIONS.GET_ARBITAGE_PRICE: {
-        const result = await arbitageStrategy.getArbitagePriceByCurrency(payload.currency)
-        const conditionResult = mappingOperator(condition, result.marginPercent)
-        if (conditionResult.isMatch) {
-          return {
-            type: 'text',
-            text:
-            `แจ้งเตือน ${payload.currency} ${conditionResult.text} ${condition.value}%\n` +
-            `ตอนนี้ ${result.marginPercent.toFixed(3)}%  แล้วค่ะ\n` +
-            `(ref. ${_id})`
-          }
-        } else {
-          return undefined
-        }
-      }
-      case ACTIONS.GET_PRICE: {
-        const result = await this.getPrice(payload.currency, payload.compare)
-        const conditionResult = mappingOperator(condition, result.value)
-        if (conditionResult.isMatch) {
-          return {
-            type: 'text',
-            text:
-            `แจ้งเตือน ${payload.currency}${payload.compare} ${conditionResult.text} ${condition.value}  \n` +
-            `ตอนนี้ ${result.value} แล้วค่ะ\n` +
-            `(ref. ${_id})`
-          }
-        }
+  async reduceNotification (notification) {
+    const { type, actionType, payload } = notification
+    // console.log('notification type: ' + type)
+    // console.log('action type: ' + actionType)
+
+    for (let strategy of strategies) {
+      if (strategy.action === actionType) {
+        const result = await strategy.resolve.bind(this)({ payload, type: actionType })
+        const msg = await strategy.conditionResolve(undefined, result, notification)
+        return msg
       }
     }
   }
@@ -111,49 +56,22 @@ class MessengerAdapter {
       throw new Error('Provider is not defined')
     }
     action.provider = this.__provider
+    for (let strategy of strategies) {
+      if (strategy.action === action.type) {
+        const result = await strategy.resolve.bind(this)(action)
+        const msg = await strategy.messageReducer(undefined, result)
+        return msg
+      }
+    }
     switch (action.type) {
-      case ACTIONS.GET_PRICE:
-        try {
-          const result = await this.getPrice(action.payload.currency, action.payload.compare)
-          return {
-            type: 'text',
-            text: `ราคา ${result.secondaryCurrency.toUpperCase()} ตอนนี้ ${result.value} ${result.primaryCurrency} ค่ะ`
-          }
-        } catch (e) {
-          return {
-            type: 'text',
-            text: 'ไม่เจอข้อมูลดังกล่าว กรุณาลองใหม่ค่ะ'
-          }
-        }
-      case ACTIONS.GET_ARBITAGE_PRICE: {
-        console.log(action)
-        const result = await arbitageStrategy.getArbitagePriceByCurrency(action.payload.currency)
-        return {
-          type: 'text',
-          text: `ราคา ${result.currency} เทียบ bx กับ bitfinex แพงกว่า ${result.marginPercent.toFixed(2)}% (${result.margin.toFixed(3)} THB)`
-        }
-      }
-      case ACTIONS.GET_ARBITAGE_PRICE_LIST: {
-        try {
-          const result = await arbitageStrategy.getArbitagePriceByCurrencyList(['omg', 'btc', 'xrp', 'eth', 'dash'])
-          const worthResult = result.prices.map(price => `${price.currency} แพงกว่า ${-price.margin.toFixed(3)} THB (${-price.marginPercent.toFixed(2)}%)\n`)
-          return {
-            type: 'text',
-            text: `ราคาตลาดเทียบระหว่าง bx กับ Bifinex\n` +
-          `ค่าเงิน 1 USD ต่อ ${result.thbusd} THB\n` +
-          worthResult.join('')
-
-          }
-        } catch (e) {
-          console.error(e)
-          return {
-            type: 'text',
-            text: `เกิดข้อผิดพลาดระหว่างเทียบราคา กรุณาลองใหม่ค่ะ`
-          }
-        }
-      }
       case ACTIONS.LIST_ALERT: {
         const result = await notificationService.getNotificationFromReception(action.source.groupId || action.source.userId)
+        if (!result.length) {
+          return {
+            type: 'text',
+            text: 'ไม่มีการแจ้งเตือนไว้ค่ะ 🤐'
+          }
+        }
         const notiStrList = result.map((noti, index) => {
           return `${noti.command}: ${noti.condition.operation} ${noti.condition.value} (${noti._id})\n\n`
         })

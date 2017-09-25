@@ -15,16 +15,18 @@ exports.removeWatcher = function (callback) {
 }
 
 function noticeListeners (action) {
-  __listeners.forEach(listener => {
-    listener(action)
+  return __listeners.map(async listener => {
+    await listener(action)
+    console.log('==== end ===')
   })
 }
 async function watcher () {
   console.log(chalk.yellow('Notification: Start condition checking...'))
   const notifications = await Notification.read({})
   for (let notification of notifications) {
-    console.log(`id: ${notification._id}, owner: ${notification.ownerId}`)
-    noticeListeners(notification)
+    console.log(`${(new Date()).toISOString()} id: ${notification._id}, owner: ${notification.ownerId}`)
+    console.log(`command: ${notification.command}`)
+    await Promise.all(noticeListeners(notification))
   }
   console.log(chalk.yellow('Notification: condition checking complete'))
 }

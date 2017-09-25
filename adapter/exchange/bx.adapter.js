@@ -3,6 +3,7 @@
 // payload, type
 // strategy act like reducer in redux
 
+const chalk = require('chalk')
 const ExchangeAdapter = require('./adapter')
 const API_ENDPOINT = 'https://bx.in.th/api/'
 
@@ -32,8 +33,7 @@ class BXAdapter extends ExchangeAdapter {
 
   async getPriceByCurrencyPrefix (currency, compare) {
     currency = currency.toUpperCase()
-    console.log('get price from BX')
-    console.log(`${currency}:${compare}`)
+    console.log(chalk.blue(`BX Adapter: ${currency}${compare}`))
     switch (currency) {
       case 'DASH':
         currency = 'DAS'
@@ -41,6 +41,7 @@ class BXAdapter extends ExchangeAdapter {
     }
     const pairing = await this.fetchDataToCache(this.API_ENDPOINT)
     const price = getCurrencyFromPairingResult(pairing, currency, compare)
+    console.log(chalk.green(`BX Adapter: ${price.value}`))
     return {
       origin: 'fixer',
       primaryCurrency: price.primaryCurrency,

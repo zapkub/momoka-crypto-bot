@@ -27,7 +27,7 @@ async function initApp () {
     const result = await arbitageStrategy.getArbitagePriceByCurrencyList(['omg', 'btc', 'eth', 'xrp'])
     res.json(result)
   })
-  app.use('/line', lineBot(config))
+  app.use('/line', lineBot(config, require('./strategy/index')))
   app.listen(config.port, function () {
     console.log('app start!')
   })

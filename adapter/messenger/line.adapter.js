@@ -1,17 +1,18 @@
 const line = require('@line/bot-sdk')
 const Router = require('express').Router
-const parser = require('../../parser')
+const createParser = require('../../parser')
 const chalk = require('chalk')
-const ACTIONS = require('../../parser/actions')
 const MesssengerAdapter = require('./adapter')
 const API_ENDPOINT = 'https://api.line.me/v2/bot/message/push'
 
 class LineAdapter extends MesssengerAdapter {
-  constructor ({ channelAccessToken, channelSecret }) {
+  constructor ({ channelAccessToken, channelSecret }, strategies) {
     super()
+    console.log(chalk.yellow('Init LINE adapter'))
     this.__provider = 'LINE'
     this.channelAccessToken = channelAccessToken
     this.channelSecret = channelSecret
+    this.parser = createParser(strategies)
     this.client = new line.Client({
       channelAccessToken,
       channelSecret
@@ -64,7 +65,7 @@ class LineAdapter extends MesssengerAdapter {
       console.log(chalk.blue(`from: ${source.userId || source.groupId}`))
       await this.resolveUser(source)
       if (event.type === 'message') {
-        const action = parser({
+        const action = this.parser({
           type: event.type,
           text: event.message.text,
           source
@@ -90,12 +91,12 @@ class LineAdapter extends MesssengerAdapter {
   }
 }
 
-module.exports = function ({port, line: { id, secret, token }}) {
+module.exports = function ({ line: { id, secret, token } }, strategies) {
   const middleware = Router()
   const lineClient = new LineAdapter({
     channelAccessToken: token,
     channelSecret: secret
-  })
+  }, strategies)
   // middleware part
   // below this is the adapter handler for line msg
   // from webhook

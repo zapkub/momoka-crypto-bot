@@ -1,22 +1,8 @@
-const parser = require('..')
 const ACTIONS = require('../actions')
+const strategies = require('../../strategy')
+const parser = require('..')(strategies)
 
 describe('Language parser test', function () {
-  it('should parse cmd correctly', async () => {
-    expect(parser({
-      type: 'message',
-      text: 'โมโมกะ ตื่น',
-      source: {
-        groupId: 'mock'
-      }
-    })).toEqual({
-      type: ACTIONS.AWAKE,
-      source: {
-        groupId: 'mock'
-      },
-      payload: {}
-    })
-  })
   it('should return get GET_ARBITAGE_PRICE on เทียบราคานอกหน่อย and compare', () => {
     expect(parser({
       type: 'message',
