@@ -32,11 +32,11 @@ const getArbitagePriceByCurrency = exports.getArbitagePriceByCurrency = async cu
 }
 exports.getArbitagePriceByCurrencyList = async function (interestedCurrency) {
   const promiseList = interestedCurrency.map(getArbitagePriceByCurrency)
+  const fixerResult = await fixer.getPriceByCurrencyPrefix('USD', 'THB')
 
   const result = await Promise.all(promiseList)
-  // const worthResult = result.filter(price => price.isWorthy)
   return {
     prices: result,
-    thbusd: result.thbusd
+    thbusd: fixerResult
   }
 }
