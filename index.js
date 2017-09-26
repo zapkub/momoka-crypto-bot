@@ -28,11 +28,14 @@ async function initApp () {
   await DBConnection(config.mongoURL)
 
   const lineBot = require('./adapter/messenger/line.adapter')
+  const facebookBot = require('./adapter/messenger/facebook.adapter')
   app.get('/', async (req, res) => {
     const html = converter.makeHtml(fs.readFileSync(path.join(__dirname, './CHANGELOG.md')).toString())
     res.send(`<head><link href='https://sindresorhus.com/github-markdown-css/github-markdown.css' rel='stylesheet' /></head>` + `<section class='markdown-body'>${html}</section>`)
   })
-  app.use('/line', lineBot(config, require('./strategy/index')))
+  const strategies = require('./strategy/index')
+  app.use('/line', lineBot(config, strategies))
+  app.use('/facebook', facebookBot(config, strategies))
   app.listen(config.port, function () {
     console.log('app start!')
   })
