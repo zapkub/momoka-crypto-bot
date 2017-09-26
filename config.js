@@ -4,6 +4,9 @@ const config = {
   botName: process.env.BOT_NAME || 'โมโมกะ',
   mongoURL: process.env.MONGODB_URL,
   domain: process.env.DOMAIN,
+  facebook: {
+
+  },
   line: {
     id: process.env.LINE_CHANNEL_ID,
     secret: process.env.LINE_CHANNEL_SECRET,
