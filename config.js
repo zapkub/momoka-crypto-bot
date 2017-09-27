@@ -4,7 +4,7 @@ const config = {
   botName: process.env.BOT_NAME || 'โมโมกะ',
   mongoURL: process.env.MONGODB_URL,
   facebook: {
-
+    pageToken: process.env.FACEBOOK_PAGE_TOKEN
   },
   line: {
     id: process.env.LINE_CHANNEL_ID,

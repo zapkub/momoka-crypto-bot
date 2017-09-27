@@ -1,14 +1,16 @@
 
 const notificationService = require('../notification.service')
 const ACTIONS = require('../../parser/actions')
+const createParser = require('../../parser')
 
 const strategies = require('../../strategy')
 const { UnimplementedError } = require('../../lib/Error')
 
 class MessengerAdapter {
-  constructor () {
+  constructor (strategies) {
     this.__provider = 'not defined'
     this.notificationList = []
+    this.parser = createParser(strategies)
     notificationService.registerWatcher(this.noticeUser.bind(this))
   }
   // create new user from messenger
