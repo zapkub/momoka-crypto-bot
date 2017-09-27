@@ -5,7 +5,7 @@ const config = {
   mongoURL: process.env.MONGODB_URL,
   domain: process.env.DOMAIN,
   facebook: {
-
+    pageToken: process.env.FACEBOOK_PAGE_TOKEN
   },
   line: {
     id: process.env.LINE_CHANNEL_ID,

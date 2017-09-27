@@ -1,19 +1,17 @@
 const line = require('@line/bot-sdk')
 const Router = require('express').Router
-const createParser = require('../../parser')
 const chalk = require('chalk')
 const MesssengerAdapter = require('./adapter')
 const API_ENDPOINT = 'https://api.line.me/v2/bot/message/push'
 
 class LineAdapter extends MesssengerAdapter {
   constructor (config, strategies) {
-    super(config)
+    super(strategies, config)
     const { channelAccessToken, channelSecret } = config
     console.log(chalk.yellow('Init LINE adapter'))
     this.__provider = 'LINE'
     this.channelAccessToken = channelAccessToken
     this.channelSecret = channelSecret
-    this.parser = createParser(strategies)
     this.client = new line.Client({
       channelAccessToken,
       channelSecret
@@ -124,5 +122,6 @@ module.exports = function (config, strategies) {
     }
     return res.status(401).end()
   })
+  console.log(chalk.green('LINE: start'))
   return middleware
 }
