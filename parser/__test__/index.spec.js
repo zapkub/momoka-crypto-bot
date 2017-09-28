@@ -23,7 +23,7 @@ describe('Language parser test', function () {
       type: 'message',
       text: 'omg thb'
     })).toEqual({
-      type: ACTIONS.GET_PRICE,
+      type: 'crypto/get-price',
       payload: {
         compare: 'thb',
         currency: 'omg'
@@ -33,7 +33,7 @@ describe('Language parser test', function () {
       type: 'message',
       text: 'โมโมกะ thb usd'
     })).toEqual({
-      type: ACTIONS.GET_PRICE,
+      type: 'crypto/get-price',
       payload: {
         compare: 'usd',
         currency: 'thb'
@@ -43,7 +43,7 @@ describe('Language parser test', function () {
       type: 'message',
       text: 'Xrpusd'
     })).toEqual({
-      type: ACTIONS.GET_PRICE,
+      type: 'crypto/get-price',
       payload: {
         compare: 'usd',
         currency: 'xrp'
@@ -58,7 +58,7 @@ describe('Language parser test', function () {
     })
     expect(result).toEqual({
       type: ACTIONS.CONDITION_ALERT,
-      subType: ACTIONS.GET_PRICE,
+      subType: 'crypto/get-price',
       command: 'omgthb',
       condition: {
         operation: 'MORE_THAN',

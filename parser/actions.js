@@ -1,7 +1,7 @@
 const ACTION = {
-  GET_PRICE: 'GET_PRICE',
-  GET_ARBITAGE_PRICE: 'GET_ARBITAGE_PRICE',
-  GET_ARBITAGE_PRICE_LIST: 'GET_ARBITAGE_PRICE_LIST',
+  GET_PRICE: 'crypto/get-price',
+  GET_ARBITAGE_PRICE: 'crypto/get-arbitage-price',
+  GET_ARBITAGE_PRICE_LIST: 'crypto/get-arbitage-price-list',
   LIST_ALERT: 'LIST_ALERT',
   SLEEP: 'SLEEP',
   CONDITION_ALERT: 'CONDITION_ALERT',
