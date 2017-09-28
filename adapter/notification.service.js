@@ -54,13 +54,13 @@ exports.actionHandler = async function ({ command, condition, source, provider, 
       interval
     })
     console.log(`Notification: create ${notification._id}`)
-    notification.action = 'เพิ่มการแจ้งเตือน'
+    notification.action = '🚨 เพิ่มการแจ้งเตือน'
     return notification
   } else if (type === ACTIONS.CANCEL_ALERT) {
     await Notification.delete(payload.id)
     console.log(`Notification: delete ${payload.id}`)
     return {
-      action: 'เลิกการแจ้งเตือน',
+      action: '🗑 เลิกการแจ้งเตือน',
       _id: payload.id
     }
   }
