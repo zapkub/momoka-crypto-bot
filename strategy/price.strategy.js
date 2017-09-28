@@ -55,8 +55,7 @@ module.exports = {
         type: 'text',
         text:
           `แจ้งเตือน ${command} ${conditionResult.text} ${condition.value}\n` +
-          `ตอนนี้ ${result.value} แล้วค่ะ 😌\n` +
-          `ref. ${_id}`
+          `ตอนนี้ ${result.value} แล้วค่ะ 😌\n`
       }
     }
   },
