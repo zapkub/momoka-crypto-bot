@@ -59,8 +59,7 @@ exports.getArbitagePriceStrategy = {
         type: 'text',
         text:
           `แจ้งเตือน ${payload.currency} ${conditionResult.text} ${condition.value}%\n` +
-          `ตอนนี้ ${result.marginPercent.toFixed(3)}%  แล้วค่ะ\n` +
-          `(ref. ${_id})`
+          `ตอนนี้ ${result.marginPercent.toFixed(3)}%  แล้วค่ะ\n`
       }
     }
   },
@@ -98,8 +97,7 @@ exports.getArbitagePriceListStrategy = {
         type: 'text',
         text:
           `แจ้งเตือน ${payload.currency}${payload.compare} ${conditionResult.text} ${condition.value}  \n` +
-          `ตอนนี้ ${result.value} แล้วค่ะ\n` +
-          `(ref. ${_id})`
+          `ตอนนี้ ${result.value} แล้วค่ะ\n`
       }
     }
   },

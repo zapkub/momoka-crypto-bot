@@ -6,8 +6,9 @@ const strategies = require('../../strategy')
 const { UnimplementedError } = require('../../lib/Error')
 
 class MessengerAdapter {
-  constructor () {
+  constructor (config) {
     this.__provider = 'not defined'
+    this.__config = config
     this.notificationList = []
     notificationService.registerWatcher(this.noticeUser.bind(this))
   }
@@ -30,11 +31,12 @@ class MessengerAdapter {
     const { type, actionType, payload } = notification
     // console.log('notification type: ' + type)
     // console.log('action type: ' + actionType)
-
     for (let strategy of strategies) {
       if (strategy.action === actionType) {
         const result = await strategy.resolve.bind(this)({ payload, type: actionType })
-        const msg = await strategy.conditionResolve(undefined, result, notification)
+        const msg = await strategy.conditionResolve(undefined, result, notification, this.__config)
+        msg.text = `${msg.text}\n` +
+        `dismiss: ${this.__config.domain}/${this.__provider.toLowerCase()}/cancel_noti/${notification._id}`
         return msg
       }
     }
@@ -83,6 +85,7 @@ class MessengerAdapter {
       case ACTIONS.CONDITION_ALERT:
       case ACTIONS.CANCEL_ALERT:
       case ACTIONS.INTERVAL: {
+        console.log(action)
         const result = await notificationService.actionHandler(action)
         return {
           type: 'text',

@@ -6,8 +6,9 @@ const MesssengerAdapter = require('./adapter')
 const API_ENDPOINT = 'https://api.line.me/v2/bot/message/push'
 
 class LineAdapter extends MesssengerAdapter {
-  constructor ({ channelAccessToken, channelSecret }, strategies) {
-    super()
+  constructor (config, strategies) {
+    super(config)
+    const { channelAccessToken, channelSecret } = config
     console.log(chalk.yellow('Init LINE adapter'))
     this.__provider = 'LINE'
     this.channelAccessToken = channelAccessToken
@@ -91,9 +92,11 @@ class LineAdapter extends MesssengerAdapter {
   }
 }
 
-module.exports = function ({ line: { id, secret, token } }, strategies) {
+module.exports = function (config, strategies) {
+  const { line: { id, secret, token } } = config
   const middleware = Router()
   const lineClient = new LineAdapter({
+    ...config,
     channelAccessToken: token,
     channelSecret: secret
   }, strategies)
@@ -101,6 +104,25 @@ module.exports = function ({ line: { id, secret, token } }, strategies) {
   // below this is the adapter handler for line msg
   // from webhook
   middleware.post('/', lineClient.requestHandler.bind(lineClient))
-
+  middleware.get('/cancel_noti/:id', async (req, res) => {
+    const { params } = req
+    console.log(req.params)
+    const ACTIONS = require('../../parser/actions')
+    if (params.id) {
+      try {
+        const result = await lineClient.getResponseMessage({
+          type: ACTIONS.CANCEL_ALERT,
+          payload: {
+            id: params.id
+          }
+        })
+        return res.json(result)
+      } catch (e) {
+        console.error(e)
+        return res.status(401).end()
+      }
+    }
+    return res.status(401).end()
+  })
   return middleware
 }
