@@ -1,20 +1,45 @@
 const Messenger = require('../adapter')
+const config = require('../../../config')
+const DBConnection = require('../../../lib/DBConnection')
 const actions = require('../../../parser/actions')
 
 describe('Messenger adapter test', () => {
-  let adapter = new Messenger()
+  let adapter = new Messenger([{
+    test: /ลองเทส/,
+    action: 'mock/test-action',
+    mapToPayload: (event) => {
+      return {
+        value: 'test'
+      }
+    },
+    resolve: (action) => {
+      if (action.payload.value === 'test') {
+        return {
+          value: 'tested'
+        }
+      }
+      throw new Error('resolve error payload is not test')
+    },
+    messageReducer: (error, resolveResult) => {
+      if (error) { throw error }
+      return {
+        type: 'text',
+        text: 'alert tested'
+      }
+    }
+  }], config)
   adapter.__provider = 'LINE'
+  beforeAll(async () => {
+    await DBConnection(config.mongoURL)
+  })
   it('should return value with GET_PRICE action correctly', async () => {
     const result = await adapter.getResponseMessage({
-      type: actions.GET_PRICE,
+      type: 'mock/test-action',
       payload: {
-        compare: 'thb',
-        currency: 'omg',
-        from: 'bx'
+        value: 'test'
       }
     })
     expect(result).toEqual(expect.anything())
-    expect(result.type).toEqual('text')
-    expect(result.text).toContain('ราคา')
+    expect(result.text).toContain('alert tested')
   })
 })
