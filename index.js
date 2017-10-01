@@ -36,8 +36,10 @@ async function initApp () {
   const strategies = require('./strategy/index')
   app.use('/line', lineBot(strategies, config))
   app.use('/facebook', facebookBot(strategies, config))
+  const notificationService = require('./adapter/notification.service')
+  notificationService.startWatcher()
   app.listen(config.port, function () {
-    console.log('app start!')
+    console.log('app start!: ' + config.port)
   })
 }
 

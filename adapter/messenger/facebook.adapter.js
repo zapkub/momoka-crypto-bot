@@ -70,7 +70,7 @@ class FacebookAdapter extends MesssengerAdapter {
   }
 }
 
-module.exports = function (config, strategies) {
+module.exports = function (strategies, config) {
   const { facebook: { pageToken, secret } } = config
   const Router = require('express').Router()
   const facebookClient = new FacebookAdapter(strategies, {

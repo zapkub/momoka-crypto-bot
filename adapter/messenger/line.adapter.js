@@ -90,7 +90,7 @@ class LineAdapter extends MesssengerAdapter {
   }
 }
 
-module.exports = function (config, strategies) {
+module.exports = function (strategies, config) {
   const { line: { id, secret, token } } = config
   const middleware = Router()
   const lineClient = new LineAdapter(strategies, {

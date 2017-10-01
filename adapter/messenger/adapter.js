@@ -6,7 +6,6 @@ const createParser = require('../../parser')
 // const strategies = require('../../strategy')
 const { UnimplementedError } = require('../../lib/Error')
 
-notificationService.startWatcher()
 class MessengerAdapter {
   constructor (strategies, config) {
     this.__provider = 'not defined'
