@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.6.0"></a>
+# [2.6.0](https://github.com/zapkub/momoka-crypto-bot/compare/v2.5.0...v2.6.0) (2017-10-01)
+
+
+### Bug Fixes
+
+* **changelog:** fix stylesheet not working ([e1aab6a](https://github.com/zapkub/momoka-crypto-bot/commit/e1aab6a))
+* **notification:** fix notification should not be added if it already exist ([70b7bf9](https://github.com/zapkub/momoka-crypto-bot/commit/70b7bf9)), closes [#3](https://github.com/zapkub/momoka-crypto-bot/issues/3)
+* **notification:** remove ref id from price strategy notification ([f2523a1](https://github.com/zapkub/momoka-crypto-bot/commit/f2523a1))
+
+
+### Features
+
+* **facebook:** add facebook handshake verify token ([762e6e5](https://github.com/zapkub/momoka-crypto-bot/commit/762e6e5))
+* **facebook:** add facebook handshake verify token ([cd88dfa](https://github.com/zapkub/momoka-crypto-bot/commit/cd88dfa))
+* **facebook:** add momoka chatbot to facebook messager api ([5f8a2c8](https://github.com/zapkub/momoka-crypto-bot/commit/5f8a2c8))
+* **facebook:** add momoka chatbot to facebook messager api ([923fdc5](https://github.com/zapkub/momoka-crypto-bot/commit/923fdc5))
+* **notification:** add link to dissmiss notification ([7086df6](https://github.com/zapkub/momoka-crypto-bot/commit/7086df6))
+
+
+
 <a name="2.5.0"></a>
 # [2.5.0](https://github.com/zapkub/momoka-crypto-bot/compare/v2.3.0...v2.5.0) (2017-09-25)
 
