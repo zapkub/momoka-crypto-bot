@@ -31,8 +31,10 @@ async function watcher () {
   console.log(chalk.yellow('Notification: condition checking complete'))
 }
 // start notification loop
-setInterval(watcher, NOTIFICATION_CHECK_INTERVAL)
-watcher()
+exports.startWatcher = () => {
+  setInterval(watcher, NOTIFICATION_CHECK_INTERVAL)
+  watcher()
+}
 exports.getNotificationFromReception = async function (receptionId) {
   const result = await Notification.read({ receptionId })
   return result

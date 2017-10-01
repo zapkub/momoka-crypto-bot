@@ -34,8 +34,8 @@ async function initApp () {
     res.send(`<head><link href='https://sindresorhus.com/github-markdown-css/github-markdown.css' rel='stylesheet' /></head>` + `<section class='markdown-body'>${html}</section>`)
   })
   const strategies = require('./strategy/index')
-  app.use('/line', lineBot(config, strategies))
-  app.use('/facebook', facebookBot(config, strategies))
+  app.use('/line', lineBot(strategies, config))
+  app.use('/facebook', facebookBot(strategies, config))
   app.listen(config.port, function () {
     console.log('app start!')
   })

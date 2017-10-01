@@ -5,7 +5,7 @@ const MesssengerAdapter = require('./adapter')
 const API_ENDPOINT = 'https://api.line.me/v2/bot/message/push'
 
 class LineAdapter extends MesssengerAdapter {
-  constructor (config, strategies) {
+  constructor (strategies, config) {
     super(strategies, config)
     const { channelAccessToken, channelSecret } = config
     console.log(chalk.yellow('Init LINE adapter'))
@@ -93,11 +93,11 @@ class LineAdapter extends MesssengerAdapter {
 module.exports = function (config, strategies) {
   const { line: { id, secret, token } } = config
   const middleware = Router()
-  const lineClient = new LineAdapter({
+  const lineClient = new LineAdapter(strategies, {
     ...config,
     channelAccessToken: token,
     channelSecret: secret
-  }, strategies)
+  })
   // middleware part
   // below this is the adapter handler for line msg
   // from webhook

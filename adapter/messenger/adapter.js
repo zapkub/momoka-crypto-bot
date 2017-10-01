@@ -3,13 +3,15 @@ const notificationService = require('../notification.service')
 const ACTIONS = require('../../parser/actions')
 const createParser = require('../../parser')
 
-const strategies = require('../../strategy')
+// const strategies = require('../../strategy')
 const { UnimplementedError } = require('../../lib/Error')
 
+notificationService.startWatcher()
 class MessengerAdapter {
   constructor (strategies, config) {
     this.__provider = 'not defined'
     this.__config = config
+    this.__strategies = strategies
     this.notificationList = []
     this.parser = createParser(strategies)
     notificationService.registerWatcher(this.noticeUser.bind(this))
@@ -33,7 +35,7 @@ class MessengerAdapter {
     const { type, actionType, payload } = notification
     // console.log('notification type: ' + type)
     // console.log('action type: ' + actionType)
-    for (let strategy of strategies) {
+    for (let strategy of this.__strategies) {
       if (strategy.action === actionType) {
         const result = await strategy.resolve.bind(this)({ payload, type: actionType })
         const msg = await strategy.conditionResolve(undefined, result, notification, this.__config)
@@ -82,7 +84,7 @@ class MessengerAdapter {
       throw new Error('Provider is not defined')
     }
     action.provider = this.__provider
-    for (let strategy of strategies) {
+    for (let strategy of this.__strategies) {
       if (strategy.action === action.type) {
         const result = await strategy.resolve.bind(this)(action)
         const msg = await strategy.messageReducer(undefined, result)
