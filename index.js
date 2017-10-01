@@ -25,7 +25,7 @@ app.use(require('express-ping').ping())
 app.use(bodyParser.json({extended: true}))
 
 async function initApp () {
-  await DBConnection(config.mongoURL)
+  const connection = await DBConnection(config.mongoURL)
 
   const lineBot = require('./adapter/messenger/line.adapter')
   const facebookBot = require('./adapter/messenger/facebook.adapter')
@@ -41,6 +41,14 @@ async function initApp () {
   app.listen(config.port, function () {
     console.log('app start!: ' + config.port)
   })
+  function onSigterm () {
+    console.info('Got SIGTERM. Graceful shutdown start', new Date().toISOString())
+  // start graceul shutdown here
+    connection.disconnect()
+    process.exit(0)
+  }
+  process.on('SIGTERM', onSigterm)
+  process.on('SIGINT', onSigterm)
 }
 
 initApp()
