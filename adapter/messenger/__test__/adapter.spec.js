@@ -4,6 +4,13 @@ const DBConnection = require('../../../lib/DBConnection')
 const actions = require('../../../parser/actions')
 
 describe('Messenger adapter test', () => {
+  let connection
+  beforeAll(async () => {
+    connection = await DBConnection(config.mongoURL)
+  })
+  afterAll(async () => {
+    await connection.disconnect()
+  })
   let adapter = new Messenger([{
     test: /ลองเทส/,
     action: 'mock/test-action',
@@ -29,9 +36,6 @@ describe('Messenger adapter test', () => {
     }
   }], config)
   adapter.__provider = 'LINE'
-  beforeAll(async () => {
-    await DBConnection(config.mongoURL)
-  })
   it('should return value with GET_PRICE action correctly', async () => {
     const result = await adapter.getResponseMessage({
       type: 'mock/test-action',

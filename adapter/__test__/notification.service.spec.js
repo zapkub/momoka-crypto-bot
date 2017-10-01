@@ -7,9 +7,13 @@ const NotificationModel = require('../../models/Notification.model')
 describe('Notification service test', () => {
   let notificationService
   let notification
+  let connection
   beforeAll(async () => {
-    await DBConnection(config.mongoURL)
+    connection = await DBConnection(config.mongoURL)
     notificationService = require('../notification.service')
+  })
+  afterAll(async () => {
+    await connection.disconnect()
   })
   const createAction = {
     type: ACTIONS.CONDITION_ALERT,
