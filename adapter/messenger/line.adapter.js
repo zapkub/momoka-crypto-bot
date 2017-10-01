@@ -102,26 +102,7 @@ module.exports = function (config, strategies) {
   // below this is the adapter handler for line msg
   // from webhook
   middleware.post('/', lineClient.requestHandler.bind(lineClient))
-  middleware.get('/cancel_noti/:id', async (req, res) => {
-    const { params } = req
-    console.log(req.params)
-    const ACTIONS = require('../../parser/actions')
-    if (params.id) {
-      try {
-        const result = await lineClient.getResponseMessage({
-          type: ACTIONS.CANCEL_ALERT,
-          payload: {
-            id: params.id
-          }
-        })
-        return res.json(result)
-      } catch (e) {
-        console.error(e)
-        return res.status(401).end()
-      }
-    }
-    return res.status(401).end()
-  })
+  middleware.get('/cancel_noti/:id', lineClient.removeNotificationHandler.bind(lineClient))
   console.log(chalk.green('LINE: start'))
   return middleware
 }

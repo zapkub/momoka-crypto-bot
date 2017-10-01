@@ -4,8 +4,9 @@ const MesssengerAdapter = require('./adapter')
 
 const FACEBOOK_ENDPOINT = 'https://graph.facebook.com/v2.6'
 class FacebookAdapter extends MesssengerAdapter {
-  constructor ({ pageToken, appSecret, verifyToken }, strategies) {
-    super(strategies)
+  constructor (config, strategies) {
+    const { pageToken, appSecret, verifyToken } = config
+    super(strategies, config)
     this.pageToken = pageToken
     this.__provider = 'FACEBOOK'
   }
@@ -69,14 +70,17 @@ class FacebookAdapter extends MesssengerAdapter {
   }
 }
 
-module.exports = function ({ facebook: { pageToken, secret } }, strategies) {
+module.exports = function (config, strategies) {
+  const { facebook: { pageToken, secret } } = config
   const Router = require('express').Router()
   const facebookClient = new FacebookAdapter({
     verifyToken: 'hider',
-    pageToken
+    pageToken,
+    ...config
   }, strategies)
 
   Router.all('/', facebookClient.requestHandler.bind(facebookClient))
+  Router.get('/cancel_noti/:id', facebookClient.removeNotificationHandler.bind(facebookClient))
   console.log(chalk.blue('Facebook: start'))
   return Router
 }

@@ -42,20 +42,29 @@ exports.actionHandler = async function ({ command, condition, source, provider, 
   console.log(`Notification: request ${chalk.blue(type)}`)
   console.log(payload)
   if (type === ACTIONS.CONDITION_ALERT) {
-    const notification = await Notification.create({
-      ownerId: source.userId,
-      receptionId: source.groupId || source.userId,
-      type: type,
-      command,
-      actionType: subType,
-      payload,
-      provider,
-      condition,
-      interval
-    })
-    console.log(`Notification: create ${notification._id}`)
-    notification.action = '🚨 เพิ่มการแจ้งเตือน'
-    return notification
+    const ifNotificationExist = await Notification.read({ receptionId: source.groupId || source.userId, command, condition })
+    console.log(ifNotificationExist)
+    if (ifNotificationExist.length > 0) {
+      return {
+        action: '😐 ดูเหมือนจะมีการแจ้งเตือนนี้ไว้แล้วค่ะ',
+        _id: ifNotificationExist[0]._id
+      }
+    } else {
+      const notification = await Notification.create({
+        ownerId: source.userId,
+        receptionId: source.groupId || source.userId,
+        type: type,
+        command,
+        actionType: subType,
+        payload,
+        provider,
+        condition,
+        interval
+      })
+      console.log(`Notification: create ${notification._id}`)
+      notification.action = '🚨 เพิ่มการแจ้งเตือน'
+      return notification
+    }
   } else if (type === ACTIONS.CANCEL_ALERT) {
     await Notification.delete(payload.id)
     console.log(`Notification: delete ${payload.id}`)

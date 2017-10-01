@@ -37,11 +37,33 @@ class MessengerAdapter {
       if (strategy.action === actionType) {
         const result = await strategy.resolve.bind(this)({ payload, type: actionType })
         const msg = await strategy.conditionResolve(undefined, result, notification, this.__config)
-        msg.text = `${msg.text}\n` +
+        if (msg) {
+          msg.text = `${msg.text}\n` +
         `dismiss: ${this.__config.domain}/${this.__provider.toLowerCase()}/cancel_noti/${notification._id}`
-        return msg
+          return msg
+        }
       }
     }
+  }
+  async removeNotificationHandler (req, res) {
+    const { params } = req
+    console.log(req.params)
+    const ACTIONS = require('../../parser/actions')
+    if (params.id) {
+      try {
+        const result = await this.getResponseMessage({
+          type: ACTIONS.CANCEL_ALERT,
+          payload: {
+            id: params.id
+          }
+        })
+        return res.json(result)
+      } catch (e) {
+        console.error(e)
+        return res.status(401).end()
+      }
+    }
+    return res.status(401).end()
   }
 
   async noticeUser (notification) {
