@@ -48,6 +48,9 @@ module.exports = {
     }
   },
   conditionResolve: async (error, result, notification) => {
+    if (error) {
+      return undefined
+    }
     const { payload, condition, _id, command } = notification
     const conditionResult = mappingOperator(condition, result.value)
     if (conditionResult.isMatch) {
