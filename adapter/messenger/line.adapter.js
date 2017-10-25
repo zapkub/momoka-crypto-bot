@@ -73,7 +73,7 @@ class LineAdapter extends MesssengerAdapter {
         try {
           const message = await this.getResponseMessage(action)
           if (!message) {
-            return null
+            return undefined
           }
           console.log('Response: ', message, replyToken)
           return this.client.replyMessage(replyToken, message)
@@ -85,8 +85,9 @@ class LineAdapter extends MesssengerAdapter {
     })
 
     const responseResults = await Promise.all(responseResultPromises)
-    console.log(chalk.bgGreen(`Response ${responseResults.length} messages to Line: ${(new Date()).toISOString()} `))
-    res.json(responseResults.filter(message => !!message))
+    const removeUndefined = responseResults.filter(message => !!message)
+    console.log(chalk.bgGreen(`Response ${removeUndefined.length} messages to Line: ${(new Date()).toISOString()} `))
+    res.json(removeUndefined)
   }
 }
 

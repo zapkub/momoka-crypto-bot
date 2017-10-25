@@ -78,9 +78,12 @@ class MessengerAdapter {
   // Response message generate here
   async getResponseMessage (action) {
     console.log('Messenger: get response with action')
-    console.log(action)
+    if (!action) {
+      console.log('no action found')
+      return undefined
+    }
     if (this.__provider === 'not defined') {
-      throw new Error('Provider is not defined')
+      return undefined
     }
     action.provider = this.__provider
     for (let strategy of this.__strategies) {
