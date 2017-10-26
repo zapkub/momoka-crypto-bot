@@ -12,7 +12,8 @@ const config = {
     id: process.env.LINE_CHANNEL_ID,
     secret: process.env.LINE_CHANNEL_SECRET,
     token: process.env.LINE_CHANNEL_TOKEN
-  }
+  },
+  ICAO_API_KEY: process.env.ICAO_API_KEY
 }
 
 module.exports = config

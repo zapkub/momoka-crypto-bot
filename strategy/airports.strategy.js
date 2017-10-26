@@ -1,5 +1,6 @@
+const config = require('../config')
 const API_ENDPOINT = (airportName) =>
-`https://v4p4sz5ijk.execute-api.us-east-1.amazonaws.com/anbdata/airports/weather/current-conditions-list?airports=${airportName}&api_key=eaebea30-b993-11e7-b846-9f5013227327&format=json`
+`https://v4p4sz5ijk.execute-api.us-east-1.amazonaws.com/anbdata/airports/weather/current-conditions-list?airports=${airportName}&api_key=${config.ICAO_API_KEY}&format=json`
 
 exports.abstractStrategy = {
   test: /^metar [a-zA-Z]{4}$/,
