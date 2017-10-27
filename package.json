@@ -7,7 +7,7 @@
     "deploy": "sh .bin/deploy.bash",
     "dev": "yarn nodemon -- index.js",
     "jest": "jest",
-    "test": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js --verbose",
+    "test": "jest",
     "release": "standard-version"
   },
   "dependencies": {

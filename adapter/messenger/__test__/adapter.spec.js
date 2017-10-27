@@ -5,12 +5,12 @@ const actions = require('../../../parser/actions')
 
 describe('Messenger adapter test', () => {
   let connection
-  beforeAll(async () => {
-    connection = await DBConnection(config.mongoURL)
-  })
-  afterAll(async () => {
-    await connection.disconnect()
-  })
+  // beforeAll(async () => {
+  //   connection = await DBConnection(config.mongoURL)
+  // })
+  // afterAll(async () => {
+  //   await connection.disconnect()
+  // })
   let adapter = new Messenger([{
     test: /ลองเทส/,
     action: 'mock/test-action',
