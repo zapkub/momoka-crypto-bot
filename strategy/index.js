@@ -1,10 +1,10 @@
 const arbitageStrategy = require('./arbitage.strategy')
 const priceStrategy = require('./price.strategy')
-const airportsStrategy = require('./airports.strategy')
+const airport = require('./airports.strategy')
 
 module.exports = [
   priceStrategy,
   arbitageStrategy.getArbitagePriceListStrategy,
   arbitageStrategy.getArbitagePriceStrategy,
-  airportsStrategy.abstractStrategy
+  airport.metarStrategy
 ]

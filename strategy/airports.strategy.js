@@ -2,7 +2,7 @@ const config = require('../config')
 const API_ENDPOINT = (airportName) =>
 `https://v4p4sz5ijk.execute-api.us-east-1.amazonaws.com/anbdata/airports/weather/current-conditions-list?airports=${airportName}&api_key=${config.ICAO_API_KEY}&format=json`
 
-exports.abstractStrategy = {
+exports.metarStrategy = {
   test: /^metar [a-zA-Z]{4}$/,
   action: 'airports/metar',
   mapToPayload: (event) => {
@@ -18,9 +18,11 @@ exports.abstractStrategy = {
   },
   messageReducer: async (error, result) => {
     console.log(result)
+    var len = result[0].raw_metar.length
+    var count = len - 9
     return {
       type: 'text',
-      text: JSON.stringify(result)
+      text: (result[0].raw_metar).substr(0, count)+' ค่ะ'
     }
   }
 }
