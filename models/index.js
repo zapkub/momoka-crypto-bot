@@ -36,6 +36,12 @@
         },
         read: (query) => {
           return []
+        },
+        update: () => {
+
+        },
+        delete: () => {
+
         }
       }
     }

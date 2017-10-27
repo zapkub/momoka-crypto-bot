@@ -25,7 +25,14 @@ app.use(require('express-ping').ping())
 app.use(bodyParser.json({extended: true}))
 
 async function initApp () {
-  const connection = await DBConnection(config.mongoURL)
+  let connection
+  if (config.mongoURL) {
+    try {
+      connection = await DBConnection(config.mongoURL)
+    } catch (e) {
+      console.log('no db')
+    }
+  }
 
   const lineBot = require('./adapter/messenger/line.adapter')
   const facebookBot = require('./adapter/messenger/facebook.adapter')
