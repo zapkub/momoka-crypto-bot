@@ -1,5 +1,5 @@
 require('isomorphic-fetch')
-const airportsStrategy = require('../airports.strategy').abstractStrategy
+const airportsStrategy = require('../airports.strategy').metarStrategy
 
 const msg = 'metar vtbd'
 describe('Airport strategy test', () => {
