@@ -64,10 +64,13 @@ module.exports = {
   },
   messageReducer: async (error, result) => {
     if (!error) {
-      return {
+      return [{
         type: 'text',
         text: `ราคา ${result.secondaryCurrency.toUpperCase()} ตอนนี้ ${result.value} ${result.primaryCurrency} ค่ะ`
-      }
+      }, {
+        type: 'text',
+        text: 'น่าซื้ออยู่นะ'
+      }]
     }
     return {
       type: 'text',

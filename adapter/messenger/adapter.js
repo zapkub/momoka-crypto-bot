@@ -90,7 +90,14 @@ class MessengerAdapter {
       if (strategy.action === action.type) {
         const result = await strategy.resolve.bind(this)(action)
         const msg = await strategy.messageReducer(undefined, result)
-        return msg
+
+        // support array msg return
+        // allow strategy to send multiple response text
+        if (Array.isArray(msg)) {
+          return msg
+        } else {
+          return [msg]
+        }
       }
     }
     switch (action.type) {

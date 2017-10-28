@@ -43,7 +43,8 @@ describe('Messenger adapter test', () => {
         value: 'test'
       }
     })
+    expect(Array.isArray(result)).toBeTruthy()
     expect(result).toEqual(expect.anything())
-    expect(result.text).toContain('alert tested')
+    expect(result[0].text).toContain('alert tested')
   })
 })

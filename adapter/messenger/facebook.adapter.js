@@ -33,12 +33,13 @@ class FacebookAdapter extends MesssengerAdapter {
     console.log(chalk.bgGreen('Facebook: Message sent!'))
   }
   async requestHandler (req, res) {
-    console.log(req.body)
     if (req.body.object === 'page') {
       const { entry } = req.body
       Promise.all(entry.map(async event => {
         // reduce message
-        const results = await Promise.all(event.messaging.map(async messageObject => {
+
+        const resultMessages = []
+        await Promise.all(event.messaging.map(async messageObject => {
           if (messageObject.message) {
             const {message, recipient, sender} = messageObject
             const source = { userId: sender.id }
@@ -48,12 +49,14 @@ class FacebookAdapter extends MesssengerAdapter {
               text: message.text,
               source
             })
-            console.log(action)
-            const echoMessage = await this.getResponseMessage(action)
-            return {
-              source,
-              message: echoMessage
-            }
+            console.log('Facebook: ' + action)
+            const echoMessages = await this.getResponseMessage(action)
+            echoMessages.forEach((message) => {
+              resultMessages.push({
+                source,
+                message
+              })
+            })
           } else {
             console.log(chalk.yellow('Facebook: Unknown webhook'))
           }
@@ -61,7 +64,7 @@ class FacebookAdapter extends MesssengerAdapter {
       ))
 
         // send messsage
-        await Promise.all(results.map(async result => {
+        await Promise.all(resultMessages.map(async result => {
           await this.sendMessage(result.source.userId, result.message)
         }))
       }))

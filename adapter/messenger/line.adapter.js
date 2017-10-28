@@ -71,12 +71,13 @@ class LineAdapter extends MesssengerAdapter {
         })
         console.log(`Text: "${event.message.text}"`)
         try {
-          const message = await this.getResponseMessage(action)
-          if (!message) {
+          const responseMessages = await this.getResponseMessage(action)
+          if (!responseMessages) {
             return undefined
           }
           console.log('Response: ', message, replyToken)
-          return this.client.replyMessage(replyToken, message)
+          await this.client.replyMessage(replyToken, responseMessages)
+          console.log(chalk.bgGreen(`Response ${responseMessages.length} messages to Line: ${(new Date()).toISOString()} `))
         } catch (e) {
           console.error(e)
           return null
@@ -85,8 +86,8 @@ class LineAdapter extends MesssengerAdapter {
     })
 
     const responseResults = await Promise.all(responseResultPromises)
+
     const removeUndefined = responseResults.filter(message => !!message)
-    console.log(chalk.bgGreen(`Response ${removeUndefined.length} messages to Line: ${(new Date()).toISOString()} `))
     res.json(removeUndefined)
   }
 }
