@@ -1,15 +1,17 @@
+const strategies = require('../strategy')
+const parser = require('../node_modules/momoka-core-bot/parser')(strategies)
 describe('Crypto bot test', () => {
   it('should not return anything if text doenst start with BOT_NAME', () => {
     expect(parser({
       type: 'message',
-      text: 'ตื่น'
-    })).toBeUndefined()
+      text: 'โมโมกะ ตื่น'
+    }).type).toEqual('unhandle')
   })
 
   it('should parse omg thb correctly also with capitalize', () => {
     expect(parser({
       type: 'message',
-      text: 'omg thb'
+      text: 'โมโมกะ omg thb'
     })).toEqual({
       type: 'crypto/get-price',
       payload: {
@@ -29,7 +31,7 @@ describe('Crypto bot test', () => {
     })
     expect(parser({
       type: 'message',
-      text: 'Xrpusd'
+      text: 'โมโมกะ Xrpusd'
     })).toEqual({
       type: 'crypto/get-price',
       payload: {
@@ -45,7 +47,7 @@ describe('Crypto bot test', () => {
       source: {}
     })
     expect(result).toEqual({
-      type: ACTIONS.CONDITION_ALERT,
+      type: 'CONDITION_ALERT',
       subType: 'crypto/get-price',
       command: 'omgthb',
       condition: {
@@ -63,7 +65,7 @@ describe('Crypto bot test', () => {
     let commandList = [
       {
         command: 'omg thb',
-        expect: ACTIONS.GET_PRICE,
+        expect: 'crypto/get-price',
         source: {},
         payload: {
           compare: 'thb',
@@ -72,7 +74,7 @@ describe('Crypto bot test', () => {
       },
       {
         command: 'เทียบราคานอกหน่อย',
-        expect: ACTIONS.GET_ARBITAGE_PRICE_LIST,
+        expect: 'crypto/get-arbitage-price-list',
         source: {},
         payload: {}
       }
@@ -87,7 +89,7 @@ describe('Crypto bot test', () => {
       })
       expect(result).toEqual({
         interval: 1000 * 5 * 60,
-        type: ACTIONS.INTERVAL,
+        type: 'INTERVAL',
         command: commandObject.command,
         subType: commandObject.expect,
         source: {},

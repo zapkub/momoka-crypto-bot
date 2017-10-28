@@ -1,9 +1,10 @@
 {
   "dependencies": {
-    "momoka-core-bot": "2.6.1"
+    "momoka-core-bot": "2.6.2"
   },
   "scripts": {
-    "start": "yarn nodemon"
+    "start": "yarn nodemon",
+    "test": "jest"
   },
   "name": "momoka-crypto-bot",
   "version": "1.0.0",
@@ -12,6 +13,7 @@
   "author": "Rungsikorn Rungsikavarnich <rungsikorn@icloud.com>",
   "license": "MIT",
   "devDependencies": {
+    "jest": "^21.2.1",
     "nodemon": "^1.12.1"
   }
 }
