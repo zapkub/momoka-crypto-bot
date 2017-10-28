@@ -1,19 +1,35 @@
-require('dotenv').config({})
-const throwConfigError = (name) => { throw new Error(name) }
-const config = {
-  port: process.env.PORT || 6969,
-  botName: process.env.BOT_NAME || 'โมโมกะ',
-  mongoURL: process.env.MONGODB_URL,
-  domain: process.env.DOMAIN || throwConfigError('Bot domain is undefined'),
-  facebook: {
-    pageToken: process.env.FACEBOOK_PAGE_TOKEN
-  },
-  line: {
-    id: process.env.LINE_CHANNEL_ID,
-    secret: process.env.LINE_CHANNEL_SECRET,
-    token: process.env.LINE_CHANNEL_TOKEN
-  },
-  ICAO_API_KEY: process.env.ICAO_API_KEY
+
+const throwConfigError = (config, key) => {
+  if (!config[key]) {
+    throw new Error(key + ' is not defined in environment config')
+  }
 }
 
-module.exports = config
+let _config = {
+
+}
+module.exports = {
+  setConfig (config) {
+    throwConfigError(config, 'botName')
+    throwConfigError(config, 'line')
+    _config = config
+  },
+  get port () {
+    return _config.port
+  },
+  get botName () {
+    return _config.botName || 'โมโมกะ'
+  },
+  get mongoURL () {
+    return _config.mongoURL || 'mongodb://localhost:27017/momoka'
+  },
+  get domain () {
+    return _config.domain
+  },
+  get facebook () {
+    return _config.facebook
+  },
+  get line () {
+    return _config.line
+  }
+}

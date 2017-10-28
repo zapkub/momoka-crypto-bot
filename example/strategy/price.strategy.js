@@ -1,6 +1,6 @@
-const BxAdapter = require('../adapter/exchange/bx.adapter')
-const CryptowatAdapter = require('../adapter/exchange/cryptowat.adapter')
-const FixerAdapter = require('../adapter/exchange/fixer.adapter')
+const BxAdapter = require('../exchange/bx.adapter')
+const CryptowatAdapter = require('../exchange/cryptowat.adapter')
+const FixerAdapter = require('../exchange/fixer.adapter')
 const { mappingOperator } = require('./helpers')
 
 const bx = new BxAdapter()

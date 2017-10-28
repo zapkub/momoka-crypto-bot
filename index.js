@@ -6,6 +6,7 @@
 
 require('isomorphic-fetch')
 const config = require('./config')
+const chalk = require('chalk')
 const DBConnection = require('./lib/DBConnection')
 
 process.on('unhandledRejection', function (reason, p) {
@@ -24,13 +25,16 @@ app.use(require('express-ping').ping())
 
 app.use(bodyParser.json({extended: true}))
 
-async function initApp () {
+async function initApp (_config, strategies) {
+  if (_config) {
+    config.setConfig(_config)
+  }
   let connection
   if (config.mongoURL) {
     try {
       connection = await DBConnection(config.mongoURL)
     } catch (e) {
-      console.log('no db')
+      console.log('no db, notification service will be offline')
     }
   }
 
@@ -41,15 +45,12 @@ async function initApp () {
     const html = converter.makeHtml(fs.readFileSync(path.join(__dirname, './CHANGELOG.md')).toString())
     res.send(`<head><link href='https://sindresorhus.com/github-markdown-css/github-markdown.css' rel='stylesheet' /></head>` + `<section class='markdown-body'>${html}</section>`)
   })
-
-  const strategies = require('./strategy/index')
+  for (let strategy of strategies) {
+    console.log(`Add strategy action: ${strategy.action}`)
+  }
   app.use('/line', lineBot(strategies, config))
   app.use('/facebook', facebookBot(strategies, config))
-  const notificationService = require('./adapter/notification.service')
-  notificationService.startWatcher()
-  app.listen(config.port, function () {
-    console.log('app start!: ' + config.port)
-  })
+
   function onSigterm () {
     console.info('Got SIGTERM. Graceful shutdown start', new Date().toISOString())
   // start graceul shutdown here
@@ -58,6 +59,18 @@ async function initApp () {
   }
   process.on('SIGTERM', onSigterm)
   process.on('SIGINT', onSigterm)
+  return {
+    start () {
+      app.listen(config.port, function () {
+        console.log(chalk.bgGreen('==== app is start on ' + config.port + ' ===='))
+        if (connection.readyState === 1) {
+          console.log('Notification service is online')
+          const notificationService = require('./adapter/notification.service')
+          notificationService.startWatcher()
+        }
+      })
+    }
+  }
 }
 
-initApp()
+module.exports = initApp
