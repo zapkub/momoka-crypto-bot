@@ -1,39 +1,17 @@
 {
-  "name": "momoka-crypto-bot",
-  "version": "2.6.0",
-  "main": "index.js",
-  "license": "MIT",
-  "scripts": {
-    "deploy": "sh .bin/deploy.bash",
-    "dev": "yarn nodemon -- ./example/index.js",
-    "jest": "jest",
-    "test": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js --verbose",
-    "release": "standard-version"
-  },
   "dependencies": {
-    "@line/bot-sdk": "^2.0.0",
-    "body-parser": "^1.17.2",
-    "chalk": "^2.1.0",
-    "dotenv": "^4.0.0",
-    "express": "^4.15.4",
-    "express-ping": "^1.4.0",
-    "isomorphic-fetch": "^2.2.1",
-    "mongoose": "^4.11.11",
-    "node-line-messaging-api": "^0.19.0",
-    "showdown": "^1.7.4"
+    "momoka-core-bot": "2.6.1"
   },
+  "scripts": {
+    "start": "yarn nodemon"
+  },
+  "name": "momoka-crypto-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:zapkub/momoka-crypto-bot.git",
+  "author": "Rungsikorn Rungsikavarnich <rungsikorn@icloud.com>",
+  "license": "MIT",
   "devDependencies": {
-    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
-    "commitizen": "^2.9.6",
-    "coveralls": "^2.13.1",
-    "cz-conventional-changelog": "^2.0.0",
-    "jest": "^21.1.0",
-    "nodemon": "^1.11.0",
-    "standard-version": "^4.2.0"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
+    "nodemon": "^1.12.1"
   }
 }

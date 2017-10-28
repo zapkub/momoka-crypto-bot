@@ -1,23 +1,11 @@
-const ACTIONS = require('../actions')
-const strategies = require('../../strategy')
-const parser = require('..')(strategies)
-
-describe('Language parser test', function () {
-  it('should return get GET_ARBITAGE_PRICE on เทียบราคานอกหน่อย and compare', () => {
-    expect(parser({
-      type: 'message',
-      text: 'compare'
-    })).toEqual({
-      type: ACTIONS.GET_ARBITAGE_PRICE_LIST,
-      payload: {}
-    })
-  })
+describe('Crypto bot test', () => {
   it('should not return anything if text doenst start with BOT_NAME', () => {
     expect(parser({
       type: 'message',
       text: 'ตื่น'
     })).toBeUndefined()
   })
+
   it('should parse omg thb correctly also with capitalize', () => {
     expect(parser({
       type: 'message',
