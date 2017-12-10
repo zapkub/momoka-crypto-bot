@@ -13,7 +13,7 @@
     "globals": ["expect", "describe", "it"]
   },
   "name": "momoka-crypto-bot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "repository": "git@github.com:zapkub/momoka-crypto-bot.git",
   "author": "Rungsikorn Rungsikavarnich <rungsikorn@icloud.com>",
