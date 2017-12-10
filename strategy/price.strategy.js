@@ -28,14 +28,19 @@ module.exports = {
   mapToPayload: event => {
     const words = event.text.split(' ')
     if (words.length === 1) {
-      return {
+      const payload = {
         // Crypto prefix
         currency: words[0].substring(0, 3).toLowerCase(),
         // Cash prefix
-        compare: words[0].substring(3, 6).toLowerCase(),
+        compare: words[0].substring(3, 6).toLowerCase()
         // Cash to convert prefix
-        convertTo: words[0].substring(6, 9).toLowerCase()
       }
+      const convertTo = words[0].substring(6, 9).toLowerCase()
+      if (convertTo) {
+        payload.convertTo = convertTo
+      }
+
+      return payload
     }
     return {
       currency: words[0].toLowerCase(),
@@ -91,9 +96,9 @@ module.exports = {
       return [
         {
           type: 'text',
-          text: `ราคา ${result.secondaryCurrency.toUpperCase()}(${result.origin}) ตอนนี้ ${
-            result.value
-          } ${result.primaryCurrency} ค่ะ`
+          text: `ราคา ${result.secondaryCurrency.toUpperCase()}(${
+            result.origin
+          }) ตอนนี้ ${result.value} ${result.primaryCurrency} ค่ะ`
         }
       ]
     }
