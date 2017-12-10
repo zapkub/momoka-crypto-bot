@@ -1,6 +1,6 @@
 require('dotenv').config({})
 let _config = {
-  shortcutRegex: /^[a-zA-Z]{6}$|^compare$/,
+  shortcutRegex: /^[a-zA-Z]{6}$|^compare$|^[a-zA-Z]{9}$/,
   port: process.env.PORT,
   botName: process.env.BOT_NAME,
   mongoURL: process.env.MONGODB_URL,

@@ -16,7 +16,7 @@ class CryptowatAdapter extends ExchangeAdapter {
     const priceInfo = await this.fetchDataToCache(targetUrl)
     console.log(chalk.green(`Cryptowat Adapter: ${priceInfo.result.price}`))
     return {
-      origin: 'cryptowat',
+      origin: 'finex',
       primaryCurrency: compare,
       secondaryCurrency: currency,
       value: priceInfo.result.price

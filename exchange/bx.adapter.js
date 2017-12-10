@@ -43,7 +43,7 @@ class BXAdapter extends ExchangeAdapter {
     const price = getCurrencyFromPairingResult(pairing, currency, compare)
     console.log(chalk.green(`BX Adapter: ${price.value}`))
     return {
-      origin: 'fixer',
+      origin: 'bx',
       primaryCurrency: price.primaryCurrency,
       secondaryCurrency: currency,
       value: price.value
