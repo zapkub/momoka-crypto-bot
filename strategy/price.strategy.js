@@ -2,10 +2,12 @@ const BxAdapter = require('../exchange/bx.adapter')
 const CryptowatAdapter = require('../exchange/cryptowat.adapter')
 const FixerAdapter = require('../exchange/fixer.adapter')
 const { mappingOperator } = require('./helpers')
+const BittrexAdapter = require('../exchange/bittrex.adapter')
 
 const bx = new BxAdapter()
 const cryptowat = new CryptowatAdapter()
 const fixer = new FixerAdapter()
+const bt = new BittrexAdapter()
 async function getPrice (currency, compare) {
   compare = compare.toLowerCase()
   try {
@@ -15,6 +17,9 @@ async function getPrice (currency, compare) {
     } else if (compare === 'usd') {
       const result = await cryptowat.getPriceByCurrencyPrefix(currency, compare)
       return result
+    } else if (compare === 'btc') {
+      const result = await bt.getPriceByCurrencyPrefix(currency, compare)
+      return result
     }
   } catch (e) {
     return fixer.getPriceByCurrencyPrefix(currency, compare)
@@ -22,6 +27,8 @@ async function getPrice (currency, compare) {
 }
 
 module.exports = {
+  // internal method
+  getPrice,
   test: /(^[a-zA-Z]{6}$)|(^[a-zA-Z]{3,4}\s[a-zA-Z]{3}$)|(^[a-zA-Z]{9}$)/g,
   type: 'text',
   action: 'crypto/get-price',
