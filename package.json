@@ -1,16 +1,19 @@
 {
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
-    "momoka-core-bot": "2.6.2"
+    "momoka-core-bot": "^2.6.5"
   },
   "scripts": {
     "start": "yarn nodemon",
     "test": "jest",
-    "cover":
-      "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js --verbose"
+    "cover": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js --verbose"
   },
   "standard": {
-    "globals": ["expect", "describe", "it"]
+    "globals": [
+      "expect",
+      "describe",
+      "it"
+    ]
   },
   "name": "momoka-crypto-bot",
   "version": "1.0.1",

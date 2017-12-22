@@ -5,18 +5,18 @@ const ExchangeAdapter = require('./adapter')
 class CryptowatAdapter extends ExchangeAdapter {
   constructor () {
     super()
-    this.API_ENDPOINT = `https://api.cryptowat.ch/`
+    this.API_ENDPOINT = `https://api.bitfinex.com/v2/`
   }
 
   async getPriceByCurrencyPrefix (currency, compare) {
-    console.log(chalk.blue(`Cryptowat Adapter: ${currency}${compare}`))
+    console.log(chalk.blue(`Bitfinex Adapter: ${currency}${compare}`))
 
     /**
      * Currency compare here
      * convert both to lowercase
      */
-    currency = currency.toLowerCase()
-    compare = compare.toLowerCase()
+    currency = currency.toUpperCase()
+    compare = compare.toUpperCase()
     // get infomation from bitfinex
     try {
       /**
@@ -27,15 +27,20 @@ class CryptowatAdapter extends ExchangeAdapter {
        * if(currency === 'xzc')
        */
 
+      switch (currency) {
+        case 'DASH':
+          currency = 'DSH'
+          break
+      }
       const targetUrl =
-        this.API_ENDPOINT + `markets/bitfinex/${currency}${compare}/price`
+        this.API_ENDPOINT + `ticker/t${currency}${compare}`
       const priceInfo = await this.fetchDataToCache(targetUrl)
-      console.log(chalk.green(`Cryptowat Adapter: ${priceInfo.result.price}`))
+      console.log(chalk.green(`Bitfinex Adapter: result ${priceInfo[6]}`))
       return {
         origin: 'finex',
         primaryCurrency: compare,
         secondaryCurrency: currency,
-        value: priceInfo.result.price
+        value: priceInfo[6]
       }
     } catch (e) {
       // handle if error soon

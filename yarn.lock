@@ -2166,9 +2166,9 @@ minimist@~0.0.1:
   dependencies:
     minimist "0.0.8"
 
-momoka-core-bot@2.6.2:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/momoka-core-bot/-/momoka-core-bot-2.6.2.tgz#a93ec42713073d7170fc3bac97108bec432689f9"
+momoka-core-bot@^2.6.5:
+  version "2.6.5"
+  resolved "https://registry.yarnpkg.com/momoka-core-bot/-/momoka-core-bot-2.6.5.tgz#1cd33822dc7757a1e06916a978f232afa57b8a82"
   dependencies:
     "@line/bot-sdk" "^2.0.0"
     body-parser "^1.17.2"

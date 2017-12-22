@@ -4,8 +4,6 @@
 
 [![Coverage Status](https://coveralls.io/repos/github/zapkub/momoka-crypto-bot/badge.svg?branch=master)](https://coveralls.io/github/zapkub/momoka-crypto-bot?branch=master)
 
-<img src="./docs/momoka.png" width="150">
-
 Momoka is simple bot, perform some simple task via messaging api
 
 ## Feature and Roadmap
@@ -52,8 +50,4 @@ Momoka bot create with a simple design pattern (see below)
 
 ## Donate
 *BTC*: `12UjMPBdMTRXboHDL2wrbZvZxFMH1uXnv6`
-
 *OMG or ETH*: `0x962B0F5AE1976A9ddE8880503d65088b25E0f1E3`
-
-## Patreon
-[MomokaCryptoBot Pateron page](https://www.patreon.com/momokacrypto)

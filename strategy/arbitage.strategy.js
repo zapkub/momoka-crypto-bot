@@ -14,18 +14,27 @@ const getArbitagePriceByCurrency = (exports.getArbitagePriceByCurrency = async c
     currency,
     'USD'
   )
-
-  const isNotWorthy = cryptowatResult.value * fixerResult.value > bxResult.value
-  const margin = cryptowatResult.value * fixerResult.value - bxResult.value
-  const marginPercent =
-    100 * margin / (cryptowatResult.value * fixerResult.value)
-  return {
-    thbusd: fixerResult.value,
-    isWorthy: !isNotWorthy,
-    currency,
-    margin,
-    marginPercent,
-    prices: [cryptowatResult, bxResult]
+  try {
+    const isNotWorthy =
+      cryptowatResult.value * fixerResult.value > bxResult.value
+    const margin = cryptowatResult.value * fixerResult.value - bxResult.value
+    const marginPercent =
+      100 * margin / (cryptowatResult.value * fixerResult.value)
+    return {
+      thbusd: fixerResult.value,
+      isWorthy: !isNotWorthy,
+      currency,
+      margin,
+      marginPercent,
+      prices: [cryptowatResult, bxResult]
+    }
+  } catch (e) {
+    console.error(e)
+    return {
+      thbusd: fixerResult.value,
+      currency,
+      prices: [cryptowatResult, bxResult]
+    }
   }
 })
 const getArbitagePriceByCurrencyList = (exports.getArbitagePriceByCurrencyList = async function (
@@ -104,17 +113,19 @@ exports.getArbitagePriceListStrategy = {
     return result
   },
   conditionResolve: async (error, result, notification) => {
-    const { payload, condition, _id } = notification
-    const conditionResult = mappingOperator(condition, result.value)
-    if (conditionResult.isMatch) {
-      return {
-        type: 'text',
-        text:
-          `แจ้งเตือน ${payload.currency}${payload.compare} ${
-            conditionResult.text
-          } ${condition.value}  \n` + `ตอนนี้ ${result.value} แล้วค่ะ\n`
+    try {
+      const { payload, condition, _id } = notification
+      const conditionResult = mappingOperator(condition, result.value)
+      if (conditionResult.isMatch) {
+        return {
+          type: 'text',
+          text:
+            `แจ้งเตือน ${payload.currency}${payload.compare} ${
+              conditionResult.text
+            } ${condition.value}  \n` + `ตอนนี้ ${result.value} แล้วค่ะ\n`
+        }
       }
-    }
+    } catch (e) {}
   },
   messageReducer: async (error, result) => {
     if (error) {
