@@ -12,8 +12,11 @@ const bt = new BittrexAdapter()
 const bi = new BinanceAdapter()
 async function getPrice (currency, compare, origin) {
   compare = compare.toLowerCase()
+  currency = currency.toLowerCase()
   try {
-    if (compare === 'thb') {
+    if (compare === 'thb' && currency === 'usd') {
+      return fixer.getPriceByCurrencyPrefix(currency, compare)
+    } else if (compare === 'thb') {
       const result = await bx.getPriceByCurrencyPrefix(currency, compare)
       return result
     } else if (compare === 'usd') {
@@ -25,8 +28,6 @@ async function getPrice (currency, compare, origin) {
     } else if (compare === 'eth') {
       const result = await bi.getPriceByCurrencyPrefix(currency, compare)
       return result
-    } else {
-      return fixer.getPriceByCurrencyPrefix(currency, compare)
     }
   } catch (e) {
     console.error(`Momoka error price strategy: ${currency} ${compare} ${origin} `)
