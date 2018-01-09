@@ -1,46 +1,55 @@
 require('isomorphic-fetch')
 const BXAdapter = require('../exchange/bx.adapter')
 const CryptowatAdapter = require('../exchange/cryptowat.adapter')
+const BinanceAdapter = require('../exchange/binance.adapter')
+const priceStrategy = require('./price.strategy')
+
 const FixerAdapter = require('../exchange/fixer.adapter')
 const { mappingOperator } = require('./helpers')
 const bx = new BXAdapter()
 const cryptowat = new CryptowatAdapter()
 const fixer = new FixerAdapter()
 
-const getArbitagePriceByCurrency = (exports.getArbitagePriceByCurrency = async currency => {
+const getArbitagePriceByCurrency = (exports.getArbitagePriceByCurrency = async (currency, origin = 'finex') => {
   const fixerResult = await fixer.getPriceByCurrencyPrefix('USD', 'THB')
-  const bxResult = await bx.getPriceByCurrencyPrefix(currency, 'THB')
-  const cryptowatResult = await cryptowat.getPriceByCurrencyPrefix(
+
+  let result = await bx.getPriceByCurrencyPrefix(currency, 'THB')
+  let compareResult
+  if (origin === 'binance') {
+    /** implement compare binance */
+  } else {
+    compareResult = await cryptowat.getPriceByCurrencyPrefix(
     currency,
     'USD'
   )
+  }
+
   try {
-    const isNotWorthy =
-      cryptowatResult.value * fixerResult.value > bxResult.value
-    const margin = cryptowatResult.value * fixerResult.value - bxResult.value
+    const isNotWorthy = compareResult.value * fixerResult.value > result.value
+    const margin = compareResult.value * fixerResult.value - result.value
     const marginPercent =
-      100 * margin / (cryptowatResult.value * fixerResult.value)
+      100 * margin / (compareResult.value * fixerResult.value)
     return {
       thbusd: fixerResult.value,
       isWorthy: !isNotWorthy,
       currency,
       margin,
       marginPercent,
-      prices: [cryptowatResult, bxResult]
+      prices: [compareResult, result]
     }
   } catch (e) {
     console.error(e)
     return {
       thbusd: fixerResult.value,
       currency,
-      prices: [cryptowatResult, bxResult]
+      prices: [compareResult, result]
     }
   }
 })
 const getArbitagePriceByCurrencyList = (exports.getArbitagePriceByCurrencyList = async function (
-  interestedCurrency
+  interestedCurrency, origin = 'finex'
 ) {
-  const promiseList = interestedCurrency.map(getArbitagePriceByCurrency)
+  const promiseList = interestedCurrency.map((currency) => getArbitagePriceByCurrency(currency, origin))
   const fixerResult = await fixer.getPriceByCurrencyPrefix('USD', 'THB')
 
   const result = await Promise.all(promiseList)
@@ -96,12 +105,22 @@ exports.getArbitagePriceStrategy = {
 }
 
 exports.getArbitagePriceListStrategy = {
-  test: /เทียบราคานอกหน่อย|compare/,
+  test: /เทียบราคานอกหน่อย|compare|^compare\s[\w]+$/,
   action: 'crypto/get-arbitage-price-list',
   mapToPayload: event => {
+    const word = event.text.split(' ')
+    if (word[1]) {
+      return {
+        origin: word[1]
+      }
+    }
     return {}
   },
   resolve: async action => {
+    let origin = 'finex'
+    if (action.payload.origin) {
+      origin = action.payload.origin
+    }
     const result = await getArbitagePriceByCurrencyList([
       'omg',
       'btc',
@@ -109,26 +128,15 @@ exports.getArbitagePriceListStrategy = {
       'eth',
       'dash',
       'bch'
-    ])
+    ], origin)
     return result
   },
   conditionResolve: async (error, result, notification) => {
-    try {
-      const { payload, condition, _id } = notification
-      const conditionResult = mappingOperator(condition, result.value)
-      if (conditionResult.isMatch) {
-        return {
-          type: 'text',
-          text:
-            `แจ้งเตือน ${payload.currency}${payload.compare} ${
-              conditionResult.text
-            } ${condition.value}  \n` + `ตอนนี้ ${result.value} แล้วค่ะ\n`
-        }
-      }
-    } catch (e) {}
+
   },
   messageReducer: async (error, result) => {
     if (error) {
+      console.log(error)
       return {
         type: 'text',
         text: `เกิดข้อผิดพลาดระหว่างเทียบราคา กรุณาลองใหม่ค่ะ`

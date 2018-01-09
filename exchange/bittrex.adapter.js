@@ -4,6 +4,7 @@ class BittrexAdapter extends ExchangeAdapter {
   constructor () {
     super()
     this.ENDPOINT = 'https://bittrex.com/api/v1.1/public/getmarketsummaries'
+    this.origin = 'btrex'
   }
   async getPriceByCurrencyPrefix (currency, compare) {
     const markets = await this.fetchDataToCache(this.ENDPOINT)
@@ -13,7 +14,7 @@ class BittrexAdapter extends ExchangeAdapter {
         price.MarketName === targetName
       ) {
         return {
-          origin: 'btrex',
+          origin: this.origin,
           primaryCurrency: compare,
           secondaryCurrency: currency,
           value: price.Last

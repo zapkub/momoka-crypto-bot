@@ -1,14 +1,16 @@
 const BxAdapter = require('../exchange/bx.adapter')
 const CryptowatAdapter = require('../exchange/cryptowat.adapter')
+const BinanceAdapter = require('../exchange/binance.adapter')
+const BittrexAdapter = require('../exchange/bittrex.adapter')
 const FixerAdapter = require('../exchange/fixer.adapter')
 const { mappingOperator } = require('./helpers')
-const BittrexAdapter = require('../exchange/bittrex.adapter')
 
 const bx = new BxAdapter()
 const cryptowat = new CryptowatAdapter()
 const fixer = new FixerAdapter()
 const bt = new BittrexAdapter()
-async function getPrice (currency, compare) {
+const bi = new BinanceAdapter()
+async function getPrice (currency, compare, origin) {
   compare = compare.toLowerCase()
   try {
     if (compare === 'thb') {
@@ -20,9 +22,17 @@ async function getPrice (currency, compare) {
     } else if (compare === 'btc') {
       const result = await bt.getPriceByCurrencyPrefix(currency, compare)
       return result
+    } else if (compare === 'eth') {
+      const result = await bi.getPriceByCurrencyPrefix(currency, compare)
+      return result
+    } else {
+      return fixer.getPriceByCurrencyPrefix(currency, compare)
     }
   } catch (e) {
-    return fixer.getPriceByCurrencyPrefix(currency, compare)
+    console.error(`Momoka error price strategy: ${currency} ${compare} ${origin} `)
+
+    console.error(e)
+    throw e
   }
 }
 
@@ -72,6 +82,7 @@ module.exports = {
           payload.compare,
           payload.convertTo
         )
+        console.log(payload)
         return {
           ...result,
           value: result.value * convertFromCompareToConvertToResult.value,

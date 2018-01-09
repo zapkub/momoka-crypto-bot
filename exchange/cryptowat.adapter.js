@@ -5,6 +5,7 @@ const ExchangeAdapter = require('./adapter')
 class CryptowatAdapter extends ExchangeAdapter {
   constructor () {
     super()
+    this.origin = 'finex'
     this.API_ENDPOINT = `https://api.bitfinex.com/v2/`
   }
 
@@ -37,7 +38,7 @@ class CryptowatAdapter extends ExchangeAdapter {
       const priceInfo = await this.fetchDataToCache(targetUrl)
       console.log(chalk.green(`Bitfinex Adapter: result ${priceInfo[6]}`))
       return {
-        origin: 'finex',
+        origin: this.origin,
         primaryCurrency: compare,
         secondaryCurrency: currency,
         value: priceInfo[6]

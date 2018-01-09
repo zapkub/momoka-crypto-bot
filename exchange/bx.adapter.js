@@ -29,6 +29,7 @@ class BXAdapter extends ExchangeAdapter {
   constructor () {
     super()
     this.API_ENDPOINT = API_ENDPOINT
+    this.origin = 'bx'
   }
 
   async getPriceByCurrencyPrefix (currency, compare) {
@@ -43,7 +44,7 @@ class BXAdapter extends ExchangeAdapter {
     const price = getCurrencyFromPairingResult(pairing, currency, compare)
     console.log(chalk.green(`BX Adapter: ${price.value}`))
     return {
-      origin: 'bx',
+      origin: this.origin,
       primaryCurrency: price.primaryCurrency,
       secondaryCurrency: currency,
       value: price.value
