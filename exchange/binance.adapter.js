@@ -20,6 +20,9 @@ class BinanceAdapter extends ExchangeAdapter {
     if (compare === 'USD') {
       compare = 'USDT'
     }
+    if (currency === 'BCH') {
+      currency = 'BCC'
+    }
     let price
     price = await this.fetchDataToCache(
       `${API_ENDPOINT}?symbol=${currency}${compare}&limit=${5}`
@@ -47,6 +50,9 @@ class BinanceAdapter extends ExchangeAdapter {
 
     if (compare === 'USDT') {
       compare = 'USD'
+    }
+    if (currency === 'BCC') {
+      currency = 'BCH'
     }
     return {
       origin: this.origin,

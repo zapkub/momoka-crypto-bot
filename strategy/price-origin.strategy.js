@@ -43,7 +43,7 @@ module.exports = {
           action.payload.compare
         )
         if (action.payload.convertTo) {
-          console.log(action.payload.convertTo)
+          console.log(action.payload)
           const convertResult = await priceStrategy.getPrice(
             result.primaryCurrency,
             action.payload.convertTo

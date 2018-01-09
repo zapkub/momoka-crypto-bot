@@ -14,7 +14,7 @@ async function getPrice (currency, compare, origin) {
   compare = compare.toLowerCase()
   currency = currency.toLowerCase()
   try {
-    if (compare === 'thb' && currency === 'usd') {
+    if ((compare === 'thb' && currency === 'usd') || (compare === 'usd' && currency === 'thb')) {
       return fixer.getPriceByCurrencyPrefix(currency, compare)
     } else if (compare === 'thb') {
       const result = await bx.getPriceByCurrencyPrefix(currency, compare)

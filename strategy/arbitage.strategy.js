@@ -1,8 +1,7 @@
 require('isomorphic-fetch')
 const BXAdapter = require('../exchange/bx.adapter')
 const CryptowatAdapter = require('../exchange/cryptowat.adapter')
-const BinanceAdapter = require('../exchange/binance.adapter')
-const priceStrategy = require('./price.strategy')
+const priceOriginStrategy = require('./price-origin.strategy')
 
 const FixerAdapter = require('../exchange/fixer.adapter')
 const { mappingOperator } = require('./helpers')
@@ -10,7 +9,10 @@ const bx = new BXAdapter()
 const cryptowat = new CryptowatAdapter()
 const fixer = new FixerAdapter()
 
-const getArbitagePriceByCurrency = (exports.getArbitagePriceByCurrency = async (currency, origin = 'finex') => {
+const getArbitagePriceByCurrency = (exports.getArbitagePriceByCurrency = async (
+  currency,
+  origin = 'finex'
+) => {
   const fixerResult = await fixer.getPriceByCurrencyPrefix('USD', 'THB')
 
   let result = await bx.getPriceByCurrencyPrefix(currency, 'THB')
@@ -18,10 +20,7 @@ const getArbitagePriceByCurrency = (exports.getArbitagePriceByCurrency = async (
   if (origin === 'binance') {
     /** implement compare binance */
   } else {
-    compareResult = await cryptowat.getPriceByCurrencyPrefix(
-    currency,
-    'USD'
-  )
+    compareResult = await cryptowat.getPriceByCurrencyPrefix(currency, 'USD')
   }
 
   try {
@@ -47,9 +46,12 @@ const getArbitagePriceByCurrency = (exports.getArbitagePriceByCurrency = async (
   }
 })
 const getArbitagePriceByCurrencyList = (exports.getArbitagePriceByCurrencyList = async function (
-  interestedCurrency, origin = 'finex'
+  interestedCurrency,
+  origin = 'finex'
 ) {
-  const promiseList = interestedCurrency.map((currency) => getArbitagePriceByCurrency(currency, origin))
+  const promiseList = interestedCurrency.map(currency =>
+    getArbitagePriceByCurrency(currency, origin)
+  )
   const fixerResult = await fixer.getPriceByCurrencyPrefix('USD', 'THB')
 
   const result = await Promise.all(promiseList)
@@ -117,24 +119,73 @@ exports.getArbitagePriceListStrategy = {
     return {}
   },
   resolve: async action => {
-    let origin = 'finex'
-    if (action.payload.origin) {
-      origin = action.payload.origin
+    const interestedCurrencyList = ['omg', 'btc', 'xrp', 'eth', 'dash', 'bch']
+    if (!action.payload.origin) {
+      action.payload.origin = 'finex'
     }
-    const result = await getArbitagePriceByCurrencyList([
-      'omg',
-      'btc',
-      'xrp',
-      'eth',
-      'dash',
-      'bch'
-    ], origin)
-    return result
-  },
-  conditionResolve: async (error, result, notification) => {
+    const result = await Promise.all(
+      interestedCurrencyList.map(async currency => {
+        const bx = await priceOriginStrategy.resolve({
+          payload: {
+            currency: currency,
+            compare: 'thb',
+            origin: 'bx'
+          }
+        })
 
+        let compareExchangeResult
+        switch (action.payload.origin) {
+          case 'btrex': {
+            if (currency !== 'btc' && currency !== 'bch') {
+              compareExchangeResult = await priceOriginStrategy.resolve({
+                payload: {
+                  currency,
+                  compare: 'btc',
+                  convertTo: 'thb',
+                  origin: 'btrex'
+                }
+              })
+            }
+            break
+          }
+          case 'finex': {
+            compareExchangeResult = await priceOriginStrategy.resolve({
+              payload: {
+                currency,
+                compare: 'usd',
+                convertTo: 'thb',
+                origin: 'finex'
+              }
+            })
+            break
+          }
+          case 'binance': {
+            compareExchangeResult = await priceOriginStrategy.resolve({
+              payload: {
+                currency,
+                compare: 'usd',
+                convertTo: 'thb',
+                origin: 'binance'
+              }
+            })
+            break
+          }
+        }
+
+        return {
+          bx,
+          compareExchangeResult
+        }
+      })
+    )
+    return {
+      result,
+      origin: action.payload.origin
+    }
   },
-  messageReducer: async (error, result) => {
+  conditionResolve: async (error, result, notification) => {},
+  messageReducer: async (error, payload) => {
+    const { result, origin } = payload
     if (error) {
       console.log(error)
       return {
@@ -142,18 +193,26 @@ exports.getArbitagePriceListStrategy = {
         text: `เกิดข้อผิดพลาดระหว่างเทียบราคา กรุณาลองใหม่ค่ะ`
       }
     }
-    const worthResult = result.prices.map(
-      price =>
-        `${price.currency} แพงกว่า ${-price.margin.toFixed(
-          3
-        )} THB (${-price.marginPercent.toFixed(2)}%)\n`
-    )
+    // const worthResult = result.prices.map(
+    //   price =>
+    //     `${price.currency} แพงกว่า ${-price.margin.toFixed(
+    //       3
+    //     )} THB (${-price.marginPercent.toFixed(2)}%)\n`
+    // )
+    console.log(result[0])
     return {
       type: 'text',
-      text:
-        `ราคาตลาดเทียบระหว่าง bx กับ Bifinex\n` +
-        `ค่าเงิน 1 USD ต่อ ${result.thbusd} THB\n` +
-        worthResult.join('')
+      text: `เทียบราคาระหว่าง bx กับ ${origin} \n` + result
+        .map(priceInfo => {
+          console.log(priceInfo)
+          if (priceInfo.compareExchangeResult) {
+            const margin = priceInfo.bx.value - priceInfo.compareExchangeResult.value
+            return `${priceInfo.bx.secondaryCurrency} แพงกว่า ${margin.toFixed(2)} (${(100 * margin / priceInfo.bx.value).toFixed(2)} % )\n`
+          } else {
+            return priceInfo.bx.secondaryCurrency + ' -\n'
+          }
+        })
+        .join('')
     }
   }
 }
