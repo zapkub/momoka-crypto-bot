@@ -39,7 +39,7 @@ You can ask Momoka for price information like `omgusd`, `margin omg` please goto
 - Create Line bussiness account
 - Create Line Bot account and setup webhook in Line management
 - create .env file from .env.example
-- run service `npm run dev`
+- run service `npm run start`
 
 
 ## Architecture
